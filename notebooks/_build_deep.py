@@ -58,7 +58,10 @@ seoul['아침승차비율'] = seoul[am_on].sum(axis=1)/(seoul[am_on].sum(axis=1)
 seoul['주간인구지수'] = seoul['자치구'].map(gu_idx)
 seoul['유형'] = np.where(seoul['아침승차비율']<0.4,'업무지구',np.where(seoul['아침승차비율']>0.6,'베드타운','혼합'))
 v = seoul[(seoul[am_on].sum(axis=1)+seoul[am_off].sum(axis=1))>10000].dropna(subset=['주간인구지수'])
-print(f"분석역 {len(v)} | 주간인구지수 ↔ 아침승차비율 상관 = {v['주간인구지수'].corr(v['아침승차비율']):.3f}")""")
+from scipy.stats import pearsonr
+r_w, p_w = pearsonr(v['주간인구지수'], v['아침승차비율'])
+print(f"분석역 {len(v)} | 주간인구지수 ↔ 아침승차비율  r={r_w:.3f}, p={p_w:.2e}")
+print("→ 귀무가설(상관 없음) 기각: " + ("통계적으로 유의함 (p<0.05)" if p_w<0.05 else "비유의"))""")
 C("""cm={'업무지구':RED,'베드타운':BLUE,'혼합':PUR}
 fig, ax = plt.subplots(figsize=(9,6))
 for t in ['업무지구','혼합','베드타운']:
