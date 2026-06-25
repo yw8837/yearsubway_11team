@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --navy:#15263F; --navy2:#1D3557; --blue:#2E6FB0; --cyan:#3DA9C4;
+    --red:#E63946; --amber:#E9A23B; --ink:#1E2733; --muted:#6B7686;
+    --line:#E4E8EE; --soft:#F5F7FA; --softer:#FAFBFC;
+  }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ font-family:'Pretendard',sans-serif; color:var(--ink); line-height:1.6;
+        font-size:10.5pt; -webkit-font-smoothing:antialiased; }
+  .page{ width:210mm; height:297mm; padding:16mm 15mm; position:relative;
+         page-break-after:always; overflow:hidden; background:#fff; }
+  .page:last-child{ page-break-after:auto; }
+
+  /* ── 표지 ── */
+  .cover{ padding:0; color:#fff; background:var(--navy); }
+  .cover-band{ position:absolute; inset:0; }
+  .cover-band::before{ content:''; position:absolute; right:-120mm; top:-60mm;
+     width:240mm; height:240mm; border-radius:50%;
+     background:radial-gradient(circle at center, rgba(61,169,196,.22), rgba(61,169,196,0) 60%); }
+  .cover-band::after{ content:''; position:absolute; left:0; bottom:78mm; width:100%; height:3px;
+     background:linear-gradient(90deg, var(--red) 0%, var(--red) 28%, rgba(255,255,255,.15) 28%); }
+  .cover-inner{ position:relative; padding:20mm 18mm; height:100%; display:flex; flex-direction:column; }
+  .eyebrow{ font-size:9.5pt; letter-spacing:.22em; color:var(--cyan); font-weight:600; }
+  .cover-team{ position:absolute; top:20mm; right:18mm; font-size:9.5pt; font-weight:700;
+     letter-spacing:.18em; color:rgba(255,255,255,.85); }
+  .cover-title{ font-size:33pt; font-weight:800; line-height:1.18; margin-top:auto; letter-spacing:-.01em; }
+  .cover-sub{ font-size:13pt; color:#BFD6E4; font-weight:500; margin-top:7mm; }
+  .cover-q{ font-size:10.5pt; color:rgba(255,255,255,.78); margin-top:5mm; max-width:150mm; line-height:1.7; }
+  .cover-meta{ margin-top:9mm; display:flex; gap:8mm; }
+  .cmeta b{ display:block; font-size:9.5pt; color:var(--cyan); font-weight:600; }
+  .cmeta span{ font-size:9.5pt; color:rgba(255,255,255,.8); }
+  .cover-cards{ margin-top:auto; display:grid; grid-template-columns:repeat(3,1fr); gap:7mm; }
+  .ccard{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
+     border-radius:10px; padding:7mm 6mm; }
+  .ccard .num{ font-size:24pt; font-weight:800; line-height:1; }
+  .ccard .lab{ font-size:8.8pt; color:var(--cyan); margin-top:3mm; font-weight:500; }
+  .cover-foot{ margin-top:8mm; font-size:8.5pt; color:rgba(255,255,255,.55); border-top:1px solid rgba(255,255,255,.13); padding-top:5mm; }
+
+  /* ── 본문 공통 ── */
+  .ph{ display:flex; align-items:baseline; gap:5mm; border-bottom:2px solid var(--navy);
+       padding-bottom:2.5mm; margin-bottom:5mm; }
+  .ph .n{ font-size:15pt; font-weight:800; color:var(--red); font-variant-numeric:tabular-nums; }
+  .ph h2{ font-size:14pt; font-weight:700; color:var(--navy); }
+  .ph .en{ margin-left:auto; font-size:8.5pt; letter-spacing:.14em; color:var(--muted); font-weight:600; text-transform:uppercase; }
+  .sec{ margin-bottom:7mm; }
+  p.body{ font-size:10.3pt; color:#33404F; margin-bottom:2mm; }
+  .lead{ font-size:10.3pt; color:#33404F; }
+  b.k{ color:var(--navy); font-weight:700; }
+  .running{ position:absolute; left:15mm; right:15mm; bottom:9mm; display:flex;
+     justify-content:space-between; font-size:8pt; color:var(--muted); border-top:1px solid var(--line); padding-top:2.5mm; }
+
+  /* Executive summary */
+  .exec{ background:var(--soft); border-left:4px solid var(--red); border-radius:0 10px 10px 0;
+     padding:6mm 7mm; margin-bottom:7mm; }
+  .exec .tag{ font-size:8.5pt; font-weight:700; letter-spacing:.16em; color:var(--red); }
+  .exec p{ font-size:11pt; color:var(--navy); font-weight:500; line-height:1.7; margin-top:2.5mm; }
+  .exec .hl{ color:var(--red); font-weight:700; }
+
+  /* SCQA chips */
+  .scqa{ display:grid; grid-template-columns:auto 1fr; gap:3mm 5mm; margin-top:3mm; }
+  .badge{ width:9mm; height:9mm; border-radius:7px; color:#fff; font-weight:800; font-size:12pt;
+     display:flex; align-items:center; justify-content:center; }
+  .scqa .t{ align-self:center; font-size:10pt; color:#33404F; }
+  .scqa .t b{ color:var(--navy); }
+
+  /* So-What table */
+  table{ width:100%; border-collapse:collapse; font-size:9.8pt; }
+  .sw th{ background:var(--red); color:#fff; text-align:left; padding:3mm 4mm; font-weight:600; font-size:9.5pt; }
+  .sw td{ padding:3mm 4mm; border-bottom:1px solid var(--line); vertical-align:top; color:#33404F; }
+  .sw tr:nth-child(even) td{ background:var(--softer); }
+  .sw td.a{ font-weight:600; color:var(--navy); width:38%; }
+
+  /* data table */
+  .dt th{ background:var(--soft); color:var(--navy); text-align:left; padding:2.6mm 4mm; font-weight:700; font-size:9.3pt; border-bottom:2px solid var(--line); }
+  .dt td{ padding:2.6mm 4mm; border-bottom:1px solid var(--line); color:#33404F; }
+  .dt td.k{ font-weight:600; color:var(--navy); }
+
+  /* key questions */
+  .ql{ list-style:none; }
+  .ql li{ display:flex; gap:4mm; padding:2.4mm 0; border-bottom:1px dashed var(--line); font-size:10.2pt; color:#33404F; }
+  .ql li:last-child{ border-bottom:none; }
+  .ql .qn{ flex:0 0 9mm; color:var(--blue); font-weight:800; }
+
+  /* metric mini cards */
+  .minis{ display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; margin:4mm 0 2mm; }
+  .mini{ background:var(--soft); border-radius:9px; padding:4.5mm 5mm; }
+  .mini .v{ font-size:16pt; font-weight:800; color:var(--navy); line-height:1; }
+  .mini .v small{ font-size:9pt; font-weight:700; color:var(--blue); }
+  .mini .l{ font-size:8.6pt; color:var(--muted); margin-top:2mm; }
+
+  /* method steps */
+  .flow{ display:flex; align-items:stretch; gap:0; margin:3mm 0; }
+  .step{ flex:1; text-align:center; position:relative; padding:0 1mm; }
+  .step .c{ width:8mm; height:8mm; border-radius:50%; background:var(--navy); color:#fff;
+     font-weight:800; font-size:9.5pt; display:flex; align-items:center; justify-content:center; margin:0 auto 2mm; }
+  .step .s{ font-size:8.4pt; color:#33404F; line-height:1.4; }
+  .step:not(:last-child)::after{ content:''; position:absolute; top:4mm; right:-1mm; width:2mm; height:1px; background:var(--line); }
+
+  .def{ background:#FFF8F8; border:1px solid #F5D9DC; border-radius:9px; padding:4.5mm 5mm; margin-top:3mm; }
+  .def b{ color:var(--red); }
+  .def .small{ font-size:9pt; color:var(--muted); margin-top:2mm; }
+
+  /* impact / deliverable lists */
+  .ic{ display:grid; grid-template-columns:1fr 1fr; gap:3mm 7mm; margin-top:1mm; }
+  .ic .it{ font-size:9.9pt; color:#33404F; padding-left:6mm; position:relative; }
+  .ic .it::before{ content:''; position:absolute; left:0; top:2.4mm; width:3mm; height:3mm;
+     border-radius:50%; background:var(--cyan); }
+  .ic .it b{ color:var(--navy); }
+
+  /* timeline */
+  .tl{ display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; margin-top:2mm; }
+  .tphase{ border:1px solid var(--line); border-top:3px solid var(--blue); border-radius:0 0 9px 9px; padding:4.5mm 5mm; }
+  .tphase .w{ font-size:8.4pt; font-weight:700; letter-spacing:.1em; color:var(--blue); }
+  .tphase .t{ font-size:9.8pt; color:#33404F; margin-top:1.5mm; line-height:1.5; }
+
+  .rr{ display:flex; flex-wrap:wrap; gap:2.5mm; margin-top:3mm; }
+  .role{ font-size:9pt; background:var(--soft); border:1px solid var(--line); border-radius:20px;
+     padding:1.6mm 4mm; color:var(--navy); font-weight:600; }
+  .role span{ color:var(--muted); font-weight:500; }
+
+  /* risk */
+  .rk th{ background:var(--navy); color:#fff; text-align:left; padding:3mm 4mm; font-weight:600; font-size:9.3pt; }
+  .rk td{ padding:3mm 4mm; border-bottom:1px solid var(--line); vertical-align:top; color:#33404F; }
+  .rk td.r{ font-weight:600; color:var(--navy); width:42%; }
+  .rk tr:nth-child(even) td{ background:var(--softer); }
+  .foot-note{ font-size:8.4pt; color:var(--muted); margin-top:6mm; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 · COVER -->
+<section class="page cover">
+  <div class="cover-band"></div>
+  <div class="cover-inner">
+    <div class="eyebrow">YEARDREAM · DATA ANALYSIS PROJECT</div>
+    <div class="cover-team">TEAM 11</div>
+    <div class="cover-title">서울 지하철<br>혼잡도 분석</div>
+    <div class="cover-sub">운영 자원 배치를 위한 데이터 기반 혼잡 진단</div>
+    <div class="cover-q">클라이언트 ｜ 서울교통공사 운영·안전팀 — “어느 역·어느 시간대·어느 방향이 가장 혼잡한가? 한정된 차량·인력을 어디에 먼저 투입할 것인가?”</div>
+    <div class="cover-cards">
+      <div class="ccard"><div class="num">579</div><div class="lab">분석 대상 역 (개)</div></div>
+      <div class="ccard"><div class="num">26</div><div class="lab">수도권 운행 노선</div></div>
+      <div class="ccard"><div class="num">45,338</div><div class="lab">데이터 행 · 78개월</div></div>
+    </div>
+    <div class="cover-foot">분석 기간 2015.01 – 2021.06 · 핵심 기준월 2021.06 · 시간대별 승·하차(24구간×2) · 결측 0 &nbsp;|&nbsp; 11team 분석 기획서</div>
+  </div>
+</section>
+
+<!-- PAGE 2 -->
+<section class="page">
+  <div class="exec">
+    <div class="tag">EXECUTIVE SUMMARY</div>
+    <p>서울 수도권 <span class="hl">26개 노선·579개 역</span>의 시간대별 승·하차 데이터(2015–2021, 45,338건)를 분석해 혼잡이 집중되는 <span class="hl">‘역 × 시간대 × 방향’</span>을 식별하고, 운영·안전팀이 증차·인력을 <span class="hl">어디에 먼저 투입할지 우선순위</span>를 제시한다. 2021년 6월 기준 승차 인원은 퇴근(18–19시)·출근(08–09시) 양대 피크에 집중되며, 본 분석은 이 패턴을 역 단위로 분해해 실행 가능한 배치 기준으로 전환한다.</p>
+  </div>
+
+  <div class="sec">
+    <div class="ph"><span class="n">01</span><h2>추진 배경 및 문제 정의</h2><span class="en">Background</span></div>
+    <p class="body">코로나19 이후 지하철 수송 수요가 회복 국면에 들어서며 출퇴근 혼잡이 다시 안전·서비스 이슈로 부상하고 있다. 운영기관은 사고 예방과 서비스 품질을 위해 혼잡 구간을 선제적으로 관리해야 하지만, 차량과 인력은 한정되어 있어 <b class="k">‘선택과 집중’</b>이 불가피하다.</p>
+    <p class="body">문제는 혼잡이 노선·역·시간대·방향에 따라 큰 편차를 보임에도, 일·월 단위 평균 지표로는 어디가 실제 병목인지 드러나지 않는다는 점이다. 그 결과 자원 배치가 <b class="k">경험과 직관</b>에 의존하게 되어, 정작 붐비는 구간을 놓치거나 과배치되는 비효율이 발생한다.</p>
+    <div class="scqa">
+      <div class="badge" style="background:var(--blue)">S</div>
+      <div class="t"><b>Situation</b> · 코로나 회복기, 지하철 이용 반등. 운영팀은 한정 자원으로 혼잡을 관리해야 한다.</div>
+      <div class="badge" style="background:var(--navy)">C</div>
+      <div class="t"><b>Complication</b> · 혼잡은 역·시간대·방향별 편차가 큰데 평균 지표로는 안 보여 자원배치 근거가 부족하다.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="ph"><span class="n">02</span><h2>분석 목적 및 목표</h2><span class="en">Objectives</span></div>
+    <p class="body" style="margin-bottom:4mm"><b class="k">목적</b> — 서울 지하철 혼잡을 데이터로 진단해, 운영팀이 증차·안전인력·역무 자원을 <b class="k">어디에 우선 배치할지</b> 객관적 의사결정 근거를 제공한다.</p>
+    <table class="sw">
+      <thead><tr><th>분석이 내놓는 것</th><th>So What — 운영팀이 내리는 결정·행동</th></tr></thead>
+      <tbody>
+        <tr><td class="a">혼잡 핫스팟 역×시간대 Top 10</td><td>해당 역·시간대에 <b>증차·안전인력 우선 투입</b>, 배차간격 단축 검토</td></tr>
+        <tr><td class="a">출퇴근 방향성 (승차/하차 우세)</td><td>아침=승차 플랫폼·저녁=하차 플랫폼 <b>인력 배치 시간대 차등화</b></td></tr>
+        <tr><td class="a">호선별 혼잡 순위</td><td>혼잡 호선에 <b>차량 증결·재배치</b> 우선순위 부여</td></tr>
+        <tr><td class="a">역별 혼잡 지도 (folium)</td><td>관리대상 역 한눈에 공유 → <b>현장점검·안내방송</b> 우선순위</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>11team</span><span>2</span></div>
+</section>
+
+<!-- PAGE 3 -->
+<section class="page">
+  <div class="sec">
+    <div class="ph"><span class="n">03</span><h2>핵심 분석 질문</h2><span class="en">Key Questions</span></div>
+    <ul class="ql">
+      <li><span class="qn">Q1</span><span>어느 <b>노선</b>이 가장 혼잡한가? (호선별 평균 이용객 규모)</span></li>
+      <li><span class="qn">Q2</span><span>노선 내에서 가장 붐비는 <b>역 Top N</b>은 어디인가? (승차·하차 각각)</span></li>
+      <li><span class="qn">Q3</span><span>혼잡은 어느 <b>시간대</b>에 집중되는가? 출근·퇴근 피크의 크기와 시점은?</span></li>
+      <li><span class="qn">Q4</span><span>역별로 <b>승차 우세(주거지)</b> vs <b>하차 우세(업무지)</b> 구조는 어떻게 갈리나?</span></li>
+      <li><span class="qn">Q5</span><span><b>역 × 시간대</b> 혼잡 핫스팟은 어디이며, 자원 투입 우선순위는?</span></li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <div class="ph"><span class="n">04</span><h2>데이터 개요</h2><span class="en">Data Overview</span></div>
+    <table class="dt">
+      <thead><tr><th style="width:26%">데이터셋</th><th>내용</th><th style="width:24%">규모 · 출처</th></tr></thead>
+      <tbody>
+        <tr><td class="k">승하차 인원</td><td>호선·역별 <b>시간대별 승·하차</b> 인원 (24구간×2 = 48개 컬럼)</td><td>45,338행 / 서울 열린데이터광장</td></tr>
+        <tr><td class="k">역 위치좌표</td><td>지하철역 위·경도 (지도 시각화 결합 키)</td><td>525개 역 / Kakao Local API</td></tr>
+      </tbody>
+    </table>
+    <div class="minis">
+      <div class="mini"><div class="v">579<small> 역</small></div><div class="l">분석 대상 역 (2021.06 기준 520)</div></div>
+      <div class="mini"><div class="v">78<small> 개월</small></div><div class="l">2015.01 – 2021.06 수집</div></div>
+      <div class="mini"><div class="v">0<small> 건</small></div><div class="l">결측치 — 정제 부담 낮음</div></div>
+    </div>
+    <p class="foot-note">※ 데이터 한계 : 승·하차 인원은 개찰구 통과 기준으로, 열차 내부의 실제 혼잡률(%)과는 다르다. 본 분석은 인원 규모를 혼잡 대리지표로 사용하며 그 한계를 6·9장에서 명시·보완한다.</p>
+  </div>
+  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>11team</span><span>3</span></div>
+</section>
+
+<!-- PAGE 4 · 방법론 -->
+<section class="page">
+  <div class="sec">
+    <div class="ph"><span class="n">05</span><h2>분석 방법론</h2><span class="en">Methodology</span></div>
+    <p class="body"><b class="k">5.1 혼잡도 정의</b> — 데이터에 기록된 시간대별 승·하차 인원을 혼잡의 1차 지표로 삼아, <b class="k">역×시간대 단위 (승차+하차) 인원</b>을 ‘이용 집중도’로 집계하고 절대 규모와 순위를 함께 본다.</p>
+    <p class="body"><b class="k">5.2 방향성 지표</b> — 역별 <b class="k">승차비율 = 승차/(승차+하차)</b>로 정의. 0.5보다 크면 승차 우세(주거·기점), 작으면 하차 우세(업무·상업). 출근(07–09)·퇴근(18–20) 시간대로 나눠 방향 전환을 관찰한다.</p>
+    <p class="body" style="margin-bottom:2mm"><b class="k">5.3 분석 파이프라인</b></p>
+    <div class="flow">
+      <div class="step"><div class="c">1</div><div class="s">정제 ·<br>Feature Eng.</div></div>
+      <div class="step"><div class="c">2</div><div class="s">호선별<br>비교</div></div>
+      <div class="step"><div class="c">3</div><div class="s">역별 혼잡<br>순위</div></div>
+      <div class="step"><div class="c">4</div><div class="s">시간대·<br>방향 패턴</div></div>
+      <div class="step"><div class="c">5</div><div class="s">역×시간<br>히트맵</div></div>
+      <div class="step"><div class="c">6</div><div class="s">folium<br>지도</div></div>
+      <div class="step"><div class="c">7</div><div class="s">운영<br>권고</div></div>
+    </div>
+    <div class="def"><b>5.4 시각화 원칙 (Claus Wilke)</b> — 정렬은 데이터가 결정(값 기준 정렬), 색은 의미 있게(혼잡=난색), 역×시간 히트맵으로 2차원 패턴을 압축, folium 지도는 마커 크기·색을 함께 써 중복 인코딩한다.
+      <div class="small">주유소 시장분석 예제(SCQA · 기초통계 · Wilke 시각화 · folium · 보고서)를 벤치마크로 동일 수준의 풀 분석을 지향한다.</div>
+    </div>
+  </div>
+  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>11team</span><span>4</span></div>
+</section>
+
+<!-- PAGE 5 -->
+<section class="page">
+  <div class="sec">
+    <div class="ph"><span class="n">06</span><h2>기대 산출물 및 활용</h2><span class="en">Deliverables</span></div>
+    <div class="ic">
+      <div class="it"><b>분석 노트북</b> — 정제·분석·시각화 전 과정 재현 코드</div>
+      <div class="it"><b>차트 세트</b> — 호선·역·시간대·히트맵 PNG</div>
+      <div class="it"><b>folium 혼잡 지도</b> — 역별 혼잡·피크 인터랙티브 HTML</div>
+      <div class="it"><b>보고서</b> — PPT · 노션 (SCQA · 피라미드 구조)</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="ph"><span class="n">07</span><h2>기대 효과</h2><span class="en">Expected Impact</span></div>
+    <div class="ic">
+      <div class="it">운영 의사결정을 <b>‘감’에서 데이터 근거</b>로 전환</div>
+      <div class="it"><b>역×시간 단위 우선순위</b>로 즉시 실행 가능</div>
+      <div class="it"><b>재현 파이프라인</b>으로 매월 갱신·상시 모니터링</div>
+      <div class="it"><b>확장성</b> — 타 노선·기간, 상권·광고 2차 활용</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="ph"><span class="n">08</span><h2>추진 일정 및 역할 분담</h2><span class="en">Schedule &amp; R&amp;R</span></div>
+    <div class="tl">
+      <div class="tphase"><div class="w">WEEK 1</div><div class="t">기획 확정 · 데이터 정제 / Feature Engineering</div></div>
+      <div class="tphase"><div class="w">WEEK 2</div><div class="t">분석 · 시각화 · folium 지도 제작</div></div>
+      <div class="tphase"><div class="w">WEEK 3</div><div class="t">PPT / 노션 보고서 · 발표 준비</div></div>
+    </div>
+    <div class="rr">
+      <div class="role">데이터 정제·FE <span>· TBD</span></div>
+      <div class="role">분석·통계 <span>· TBD</span></div>
+      <div class="role">시각화·지도 <span>· TBD</span></div>
+      <div class="role">보고서·발표 <span>· TBD</span></div>
+    </div>
+    <p class="foot-note" style="margin-top:4mm">협업 — GitHub <b>yearsubway_11team</b> 통합관리(팀장 단일 커밋) + 노션(회의록·역할분담). 데이터 원본은 .gitignore 처리, 출처만 README에 명시.</p>
+  </div>
+
+  <div class="sec">
+    <div class="ph"><span class="n">09</span><h2>리스크 및 대응</h2><span class="en">Risks &amp; Mitigation</span></div>
+    <table class="rk">
+      <thead><tr><th>리스크</th><th>대응</th></tr></thead>
+      <tbody>
+        <tr><td class="r">승하차 인원 ≠ 열차 내 실제 혼잡률 (수송력 미반영)</td><td>대리지표임을 명시, 인원 규모·순위 중심으로 해석</td></tr>
+        <tr><td class="r">2021.06은 코로나 영향 잔존 시점</td><td>2015–2021 시계열로 평시 대비 변화를 보완 분석</td></tr>
+        <tr><td class="r">환승역 승하차 다중 집계 가능성</td><td>역명 기준 합산, 주요 환승역은 별도 주석 처리</td></tr>
+        <tr><td class="r">역명–좌표 매칭 누락 (579역 중 525역 좌표 보유)</td><td>좌표 보유 역만 지도화, 누락분은 표로 보완</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>11team</span><span>5</span></div>
+</section>
+
+</body>
+</html>

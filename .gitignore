@@ -1,0 +1,12 @@
+# 원본 데이터 (용량 큼 · 출처는 README 참고)
+*.csv
+dataset/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# 임시 파일
+*.tmp
+~$*
