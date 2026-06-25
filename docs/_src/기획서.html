@@ -2,7 +2,6 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   :root{
@@ -11,7 +10,7 @@
     --line:#E4E8EE; --soft:#F5F7FA; --softer:#FAFBFC;
   }
   html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-  body{ font-family:'Pretendard',sans-serif; color:var(--ink); line-height:1.6;
+  body{ font-family:'Malgun Gothic','맑은 고딕',sans-serif; color:var(--ink); line-height:1.6;
         font-size:10.5pt; -webkit-font-smoothing:antialiased; }
   .page{ width:210mm; height:297mm; padding:16mm 15mm; position:relative;
          page-break-after:always; overflow:hidden; background:#fff; }
@@ -139,16 +138,16 @@
   <div class="cover-band"></div>
   <div class="cover-inner">
     <div class="eyebrow">YEARDREAM · DATA ANALYSIS PROJECT</div>
-    <div class="cover-team">TEAM 11</div>
+    <div class="cover-team">TIMLEVEN · T-XI</div>
     <div class="cover-title">서울 지하철<br>혼잡도 분석</div>
     <div class="cover-sub">운영 자원 배치를 위한 데이터 기반 혼잡 진단</div>
     <div class="cover-q">클라이언트 ｜ 서울교통공사 운영·안전팀 — “어느 역·어느 시간대·어느 방향이 가장 혼잡한가? 한정된 차량·인력을 어디에 먼저 투입할 것인가?”</div>
     <div class="cover-cards">
-      <div class="ccard"><div class="num">579</div><div class="lab">분석 대상 역 (개)</div></div>
-      <div class="ccard"><div class="num">26</div><div class="lab">수도권 운행 노선</div></div>
+      <div class="ccard"><div class="num">296</div><div class="lab">분석 대상 역 (서울)</div></div>
+      <div class="ccard"><div class="num">2</div><div class="lab">외부데이터 Join</div></div>
       <div class="ccard"><div class="num">45,338</div><div class="lab">데이터 행 · 78개월</div></div>
     </div>
-    <div class="cover-foot">분석 기간 2015.01 – 2021.06 · 핵심 기준월 2021.06 · 시간대별 승·하차(24구간×2) · 결측 0 &nbsp;|&nbsp; 11team 분석 기획서</div>
+    <div class="cover-foot">TIMLEVEN (T-XI) · 임유정 · 전경은 · 최용우 · 최동렬 &nbsp;|&nbsp; 분석 2015.01–2021.06 · 기준월 2021.06 · 11team 기획서</div>
   </div>
 </section>
 
@@ -156,7 +155,7 @@
 <section class="page">
   <div class="exec">
     <div class="tag">EXECUTIVE SUMMARY</div>
-    <p>서울 수도권 <span class="hl">26개 노선·579개 역</span>의 시간대별 승·하차 데이터(2015–2021, 45,338건)를 분석해 혼잡이 집중되는 <span class="hl">‘역 × 시간대 × 방향’</span>을 식별하고, 운영·안전팀이 증차·인력을 <span class="hl">어디에 먼저 투입할지 우선순위</span>를 제시한다. 2021년 6월 기준 승차 인원은 퇴근(18–19시)·출근(08–09시) 양대 피크에 집중되며, 본 분석은 이 패턴을 역 단위로 분해해 실행 가능한 배치 기준으로 전환한다.</p>
+    <p>서울 <span class="hl">296개 역</span>의 시간대별 승·하차 데이터(2015–2021, 45,338건)에 <span class="hl">주간인구지수·기상 등 외부데이터를 결합(Join)</span>해, 혼잡이 집중되는 <span class="hl">‘역 × 시간대 × 방향’</span>을 식별하고 운영·안전팀의 <span class="hl">자원 투입 우선순위</span>를 제시한다. 출근(08–09시)·퇴근(18–19시) 양대 피크에 집중되는 패턴을 역 단위로 분해하고, 방향성은 외부 인구데이터로 통계 검증해 실행 가능한 배치 기준으로 전환한다.</p>
   </div>
 
   <div class="sec">
@@ -205,12 +204,14 @@
     <table class="dt">
       <thead><tr><th style="width:26%">데이터셋</th><th>내용</th><th style="width:24%">규모 · 출처</th></tr></thead>
       <tbody>
-        <tr><td class="k">승하차 인원</td><td>호선·역별 <b>시간대별 승·하차</b> 인원 (24구간×2 = 48개 컬럼)</td><td>45,338행 / 서울 열린데이터광장</td></tr>
-        <tr><td class="k">역 위치좌표</td><td>지하철역 위·경도 (지도 시각화 결합 키)</td><td>525개 역 / Kakao Local API</td></tr>
+        <tr><td class="k">승하차 인원</td><td>호선·역별 <b>시간대별 승·하차</b> 인원 (24구간×2)</td><td>45,338행 / 서울 열린데이터광장</td></tr>
+        <tr><td class="k">역 위치·주소</td><td>지하철역 위·경도·주소 (지도·자치구 매핑 키)</td><td>서울 296역 / 위치 데이터</td></tr>
+        <tr><td class="k">주간인구지수 <b style="color:var(--red)">· 외부 Join</b></td><td>자치구 주간/상주 인구비 — <b>방향성(업무·주거) 실증</b></td><td>자치구 25 / 공공데이터포털</td></tr>
+        <tr><td class="k">기온·강수 <b style="color:var(--red)">· 외부 Join</b></td><td>월별 평균기온·강수 — <b>시계열 날씨 영향 점검</b></td><td>78개월 / 기상청</td></tr>
       </tbody>
     </table>
     <div class="minis">
-      <div class="mini"><div class="v">579<small> 역</small></div><div class="l">분석 대상 역 (2021.06 기준 520)</div></div>
+      <div class="mini"><div class="v">296<small> 역</small></div><div class="l">서울 분석 대상 역</div></div>
       <div class="mini"><div class="v">78<small> 개월</small></div><div class="l">2015.01 – 2021.06 수집</div></div>
       <div class="mini"><div class="v">0<small> 건</small></div><div class="l">결측치 — 정제 부담 낮음</div></div>
     </div>
@@ -224,7 +225,7 @@
   <div class="sec">
     <div class="ph"><span class="n">05</span><h2>분석 방법론</h2><span class="en">Methodology</span></div>
     <p class="body"><b class="k">5.1 혼잡도 정의</b> — 데이터에 기록된 시간대별 승·하차 인원을 혼잡의 1차 지표로 삼아, <b class="k">역×시간대 단위 (승차+하차) 인원</b>을 ‘이용 집중도’로 집계하고 절대 규모와 순위를 함께 본다.</p>
-    <p class="body"><b class="k">5.2 방향성 지표</b> — 역별 <b class="k">승차비율 = 승차/(승차+하차)</b>로 정의. 0.5보다 크면 승차 우세(주거·기점), 작으면 하차 우세(업무·상업). 출근(07–09)·퇴근(18–20) 시간대로 나눠 방향 전환을 관찰한다.</p>
+    <p class="body"><b class="k">5.2 방향성 지표 · 외부 검증</b> — 역별 <b class="k">승차비율 = 승차/(승차+하차)</b>로 정의(&gt;0.5 주거 우세, &lt;0.5 업무 우세). 이를 자치구 <b class="k">주간인구지수와 피어슨 상관·유의성 검정</b>으로 객관 검증한다(귀무가설: 상관 없음 → 기각 시 통계적으로 유의).</p>
     <p class="body" style="margin-bottom:2mm"><b class="k">5.3 분석 파이프라인</b></p>
     <div class="flow">
       <div class="step"><div class="c">1</div><div class="s">정제 ·<br>Feature Eng.</div></div>
@@ -250,7 +251,7 @@
       <div class="it"><b>분석 노트북</b> — 정제·분석·시각화 전 과정 재현 코드</div>
       <div class="it"><b>차트 세트</b> — 호선·역·시간대·히트맵 PNG</div>
       <div class="it"><b>folium 혼잡 지도</b> — 역별 혼잡·피크 인터랙티브 HTML</div>
-      <div class="it"><b>보고서</b> — PPT · 노션 (SCQA · 피라미드 구조)</div>
+      <div class="it"><b>보고서·발표자료</b> — PDF (SCQA · 피라미드 구조)</div>
     </div>
   </div>
 
@@ -272,10 +273,10 @@
       <div class="tphase"><div class="w">WEEK 3</div><div class="t">PPT / 노션 보고서 · 발표 준비</div></div>
     </div>
     <div class="rr">
-      <div class="role">데이터 정제·FE <span>· TBD</span></div>
-      <div class="role">분석·통계 <span>· TBD</span></div>
-      <div class="role">시각화·지도 <span>· TBD</span></div>
-      <div class="role">보고서·발표 <span>· TBD</span></div>
+      <div class="role">임유정</div>
+      <div class="role">전경은</div>
+      <div class="role">최용우</div>
+      <div class="role">최동렬</div>
     </div>
     <p class="foot-note" style="margin-top:4mm">협업 — GitHub <b>yearsubway_11team</b> 통합관리(팀장 단일 커밋) + 노션(회의록·역할분담). 데이터 원본은 .gitignore 처리, 출처만 README에 명시.</p>
   </div>
@@ -288,7 +289,7 @@
         <tr><td class="r">승하차 인원 ≠ 열차 내 실제 혼잡률 (수송력 미반영)</td><td>대리지표임을 명시, 인원 규모·순위 중심으로 해석</td></tr>
         <tr><td class="r">2021.06은 코로나 영향 잔존 시점</td><td>2015–2021 시계열로 평시 대비 변화를 보완 분석</td></tr>
         <tr><td class="r">환승역 승하차 다중 집계 가능성</td><td>역명 기준 합산, 주요 환승역은 별도 주석 처리</td></tr>
-        <tr><td class="r">역명–좌표 매칭 누락 (579역 중 525역 좌표 보유)</td><td>좌표 보유 역만 지도화, 누락분은 표로 보완</td></tr>
+        <tr><td class="r">서울 외 수도권 역은 운영 범위 밖</td><td>서울 296역으로 한정해 분석 일관성·정확도 확보</td></tr>
       </tbody>
     </table>
   </div>
