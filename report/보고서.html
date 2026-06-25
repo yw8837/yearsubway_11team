@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--navy:#15263F;--navy2:#1D3557;--red:#E63946;--blue:#457B9D;--cyan:#3DA9C4;--ink:#1E2733;--soft:#F5F7FA;--line:#E4E8EE;--muted:#6B7686;--green:#1B7A3D;--orange:#F57C1F}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{font-family:'Malgun Gothic','맑은 고딕',sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.7;counter-reset:pg}
+  .page{width:210mm;min-height:297mm;padding:16mm 16mm 19mm;position:relative;page-break-after:always;background:#fff}
+  .page:not(.cover){counter-increment:pg}
+  .page:last-child{page-break-after:auto}
+  .cover{background:var(--navy);color:#fff;padding:0;height:297mm}
+  .cover-in{padding:26mm 20mm;height:100%;display:flex;flex-direction:column;position:relative}
+  .cover .eyebrow{font-size:11pt;letter-spacing:.2em;color:var(--cyan);font-weight:700}
+  .cover h1{font-size:33pt;font-weight:800;line-height:1.2;margin-top:auto;letter-spacing:-.01em}
+  .cover .sub{font-size:13.5pt;color:#BFD6E4;margin-top:7mm}
+  .cover .bar{width:30%;height:3px;background:var(--red);margin:8mm 0}
+  .cover .nums{display:flex;gap:13mm}
+  .cover .nums b{display:block;font-size:21pt;font-weight:800}.cover .nums span{font-size:9pt;color:var(--cyan)}
+  .cover .team-row{margin-top:9mm;padding-top:5mm;border-top:1px solid rgba(255,255,255,.18);font-size:10.5pt;color:#dfe9f0}
+  .cover .team-row b{color:#fff;letter-spacing:.04em}.cover .team-row .nm{color:#BFD6E4;margin-left:2mm}
+  .cover .foot{margin-top:6mm;font-size:8.3pt;color:rgba(255,255,255,.5)}
+  .txi{position:absolute;top:24mm;right:20mm;width:31mm;height:23mm;background:var(--green);border-radius:4mm;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.3);display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .txi .stripe{position:absolute;top:-4mm;left:-8%;width:116%;height:11mm;background:linear-gradient(180deg,var(--orange) 0 55%,var(--red) 55% 100%);border-radius:0 0 55% 55%/0 0 100% 100%}
+  .txi b{color:#fff;font-size:17pt;font-weight:900;letter-spacing:-.5pt;z-index:1;margin-top:5mm;text-shadow:0 1px 2px rgba(0,0,0,.2)}
+  .txi span{color:#fff;font-size:4.2pt;letter-spacing:2pt;z-index:1;font-weight:700;margin-top:.5mm}
+  h2.sec{font-size:15pt;color:var(--navy);font-weight:800;border-bottom:2.5px solid var(--navy);padding-bottom:2.3mm;margin:0 0 4mm;display:flex;align-items:baseline;gap:4mm}
+  h2.sec .n{color:var(--red)}
+  h3{font-size:11.5pt;color:var(--navy);font-weight:700;margin:5mm 0 2mm}
+  p{margin-bottom:2.8mm;color:#2b3a4a}p b{color:var(--navy)}
+  .lead{font-size:11pt;color:var(--navy);font-weight:500;margin-bottom:3mm}
+  .exec{background:var(--soft);border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:4.5mm 6mm;margin:4mm 0}
+  .exec .tag{font-size:8.5pt;font-weight:700;letter-spacing:.15em;color:var(--red)}
+  .exec p{font-size:10.5pt;color:var(--navy);font-weight:500;margin:1.5mm 0 0;line-height:1.7}.exec .hl{color:var(--red);font-weight:700}
+  .scqa{display:grid;grid-template-columns:auto 1fr;gap:3.5mm 5mm;margin:4mm 0}
+  .badge{width:9mm;height:9mm;border-radius:7px;color:#fff;font-weight:800;font-size:12pt;display:flex;align-items:center;justify-content:center}
+  .scqa .t{align-self:center;font-size:10.5pt;color:#2b3a4a}.scqa .t b{color:var(--navy)}
+  figure{margin:3mm 0;text-align:center}
+  figure img{max-width:100%;object-fit:contain;border:1px solid var(--line);border-radius:6px}
+  figcaption{font-size:8.5pt;color:var(--muted);margin-top:1.5mm}
+  table{width:100%;border-collapse:collapse;font-size:9.5pt;margin:3mm 0}
+  th{background:var(--navy);color:#fff;text-align:left;padding:2.6mm 4mm;font-weight:600}
+  td{padding:2.5mm 4mm;border-bottom:1px solid var(--line);color:#2b3a4a;vertical-align:top}
+  tr:nth-child(even) td{background:var(--soft)}td.k{font-weight:600;color:var(--navy)}
+  .rk{color:var(--red);font-weight:800}
+  .keybox{background:#FFF8F8;border:1px solid #F5D9DC;border-radius:8px;padding:3.5mm 5mm;margin:3mm 0}
+  .keybox b{color:var(--red);font-size:12.5pt}
+  ul{margin:2mm 0 3mm 5mm}li{font-size:10pt;color:#2b3a4a;margin-bottom:1.8mm}li b{color:var(--navy)}
+  .insight{background:var(--soft);border-radius:8px;padding:3.5mm 5mm;margin:3mm 0;font-size:9.8pt;border-left:3px solid var(--cyan)}
+  .insight b{color:var(--navy)}
+  .run{position:absolute;left:16mm;right:16mm;bottom:9mm;display:flex;justify-content:space-between;font-size:8pt;color:#b3bcc7;border-top:1px solid var(--line);padding-top:2.3mm}
+  .run .pg::after{content:counter(pg)}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin:3mm 0}
+  .card{border:1px solid var(--line);border-radius:9px;padding:4mm 5mm}
+  .card h4{font-size:10.5pt;color:#fff;font-weight:700;margin:-4mm -5mm 3mm;padding:2.5mm 5mm;border-radius:9px 9px 0 0}
+  .card.am h4{background:var(--red)}.card.pm h4{background:var(--blue)}
+  .card ul{margin:0 0 0 4mm}.card li{font-size:9.2pt;margin-bottom:1.5mm}
+  .toc{margin-top:5mm}
+  .toc .row{display:flex;align-items:baseline;font-size:12.5pt;padding:3.2mm 0;border-bottom:1px solid var(--line)}
+  .toc .row .c{color:var(--red);font-weight:800;width:13mm}.toc .row .t{color:var(--navy);font-weight:600;flex:1}.toc .row .p{color:var(--muted);font-size:10pt}
+  .toc .sub{font-size:9.3pt;color:var(--muted);margin:1.8mm 0 0 13mm;line-height:1.6}
+  .pyr{margin:4mm 0 5mm}
+  .pyr .top{background:var(--navy);color:#fff;text-align:center;padding:5mm 6mm;border-radius:9px;font-size:12.5pt;font-weight:700;line-height:1.5}
+  .pyr .top em{color:#FFC9CE;font-style:normal;text-decoration:underline}
+  .pyr .arr{text-align:center;color:var(--red);font-size:9.5pt;margin:2.5mm 0;font-weight:700;letter-spacing:.08em}
+  .pyr .base{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4mm}
+  .pyr .b{background:var(--soft);border-top:3px solid var(--red);border-radius:0 0 9px 9px;padding:4mm;font-size:9.3pt;line-height:1.55}
+  .pyr .b b{color:var(--navy);display:block;margin-bottom:1.5mm;font-size:10.5pt}
+  .pyr .b em{color:var(--red);font-style:normal;font-weight:700}
+</style></head><body>
+
+<section class="page cover"><div class="cover-in">
+  <div class="eyebrow">YEARDREAM · DATA ANALYSIS REPORT</div>
+  <div class="txi"><div class="stripe"></div><b>T-XI</b><span>TEAM ELEVEN</span></div>
+  <h1>서울 지하철<br>혼잡도 분석 보고서</h1>
+  <div class="sub">언제·어디서·어느 방향이 붐비는가 — 운영 자원 배치를 위한 데이터 진단</div>
+  <div class="bar"></div>
+  <div class="nums"><div><b>296</b><span>분석 대상 역(서울)</span></div><div><b>45,338</b><span>데이터 행 · 2015–2021</span></div><div><b>2건</b><span>외부 Join(인구·기상)</span></div></div>
+  <div class="team-row"><b>TEAM ELEVEN (T-XI)</b><span class="nm">임유정 · 전경은 · 최용우 · 최동렬</span></div>
+  <div class="foot">클라이언트(가상): 서울교통공사 운영·안전팀 &nbsp;|&nbsp; 데이터: 서울 열린데이터광장·공공데이터포털·기상청</div>
+</div></section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">요약</span> Executive Summary</h2>
+  <p class="lead">바바라 민토 <b>피라미드 원칙</b>에 따라 핵심 결론을 먼저 제시하고, 세 가지 근거가 이를 떠받친다.</p>
+  <div class="pyr">
+    <div class="top">서울 지하철 혼잡은 역·시간대·방향마다 구조적으로 다르며,<br>출퇴근·승하차를 분리해 자원을 <em>차등 배치</em>해야 한다</div>
+    <div class="arr">▲ 세 가지 근거가 뒷받침한다</div>
+    <div class="base">
+      <div class="b"><b>① 시간대</b>출근 08–09시 하차, 퇴근 18–19시 승차 — <em>양대 피크</em>에 집중</div>
+      <div class="b"><b>② 방향성</b>업무지구는 아침 하차·저녁 승차. 주간인구지수와 <em>r=−0.67 (p&lt;0.0001)</em></div>
+      <div class="b"><b>③ 핫스팟</b>출근 가산·여의도 / 퇴근 강남·잠실 — <em>시간대별 상이</em></div>
+    </div>
+  </div>
+  <div class="exec"><div class="tag">한 줄 요약</div><p>혼잡 대응의 핵심은 ‘더 많은 자원’이 아니라 <span class="hl">‘맞는 시간 · 맞는 역 · 맞는 방향’에 자원을 두는 것</span>이다. 본 보고서는 그 판단의 데이터 근거와 즉시 실행 가능한 운영안을 제시한다.</p></div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">목차</span> Contents</h2>
+  <div class="toc">
+    <div class="row"><span class="c">1</span><span class="t">분석 배경과 문제 (SCQA)</span><span class="p">p.3</span></div>
+    <div class="row"><span class="c">2</span><span class="t">데이터와 분석 방법</span><span class="p">p.4</span></div>
+    <div class="row"><span class="c">3</span><span class="t">분석 결과</span><span class="p">p.5</span></div>
+    <div class="sub">3.1 호선별 이용 · 3.2 시간대 패턴 · 3.3 출근 방향 · 3.4 퇴근 방향 · 3.5 방향성 실증(통계) · 3.6 공간 분포 · 3.7 시계열(코로나·날씨)</div>
+    <div class="row"><span class="c">4</span><span class="t">솔루션 — 데이터 기반 운영 개선안</span><span class="p">p.12</span></div>
+    <div class="sub">4.1 혼잡 핫스팟 우선순위 · 4.2 시간대별 실행 권고 · 4.3 실행 로드맵과 기대효과</div>
+    <div class="row"><span class="c">5</span><span class="t">결론 · 부록</span><span class="p">p.15</span></div>
+  </div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">1.</span> 분석 배경과 문제 — SCQA</h2>
+  <p>코로나19 회복기에 접어들며 지하철 이용이 빠르게 반등해 출퇴근 혼잡이 다시 안전·서비스 이슈로 부상했다. 그러나 혼잡은 노선·역·시간대·방향에 따라 편차가 매우 커서, 일·월 단위 평균 지표만으로는 ‘어느 지점이 실제 병목인지’가 드러나지 않는다. 그 결과 한정된 차량·인력이 ‘경험과 직관’에 의존해 배치되어 비효율이 발생한다.</p>
+  <div class="scqa">
+    <div class="badge" style="background:var(--blue)">S</div><div class="t"><b>상황(Situation)</b> · 코로나 회복기, 지하철 이용 반등. 운영팀은 한정된 자원으로 혼잡을 관리해야 한다.</div>
+    <div class="badge" style="background:var(--navy)">C</div><div class="t"><b>문제(Complication)</b> · 혼잡은 역·시간·방향마다 다른데 평균으론 보이지 않아, 자원배치의 객관적 근거가 부족하다.</div>
+    <div class="badge" style="background:var(--muted)">Q</div><div class="t"><b>질문(Question)</b> · 어느 역·어느 시간대·어느 방향이 가장 혼잡하며, 자원 투입 우선순위는 무엇인가?</div>
+    <div class="badge" style="background:var(--red)">A</div><div class="t"><b>답(Answer)</b> · 혼잡 핫스팟(역×시간×방향)을 점수화해 도출하고, 출퇴근 시간대별 배치 우선순위와 실행안을 제시한다.</div>
+  </div>
+  <div class="insight"><b>본 보고서의 관점</b> — 혼잡을 ‘하나의 평균값’이 아니라 <b>역 × 시간 × 방향</b>의 3축으로 분해해 본다. 이 분해의 해상도가 곧 자원 배치의 정확도를 결정한다. 3장에서 이 3축을 차례로 규명하고, 4장에서 운영안으로 연결한다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">2.</span> 데이터와 분석 방법</h2>
+  <p class="lead">메인 데이터는 서울 지하철 시간대별 승·하차 인원이며, <b>혼잡 = 승차 + 하차</b>로 정의해 역×시간 단위로 집계했다. 강사 평가 포인트인 <b>외부데이터 Join 2건</b>으로 패턴을 객관적으로 검증했다.</p>
+  <table>
+    <tr><th>구분</th><th>데이터</th><th>출처</th><th>Join 키 · 역할</th></tr>
+    <tr><td class="k">메인</td><td>시간대별 승·하차 (45,338행, 2015–2021)</td><td>서울 열린데이터광장</td><td>— · 혼잡 규모·방향·시계열</td></tr>
+    <tr><td class="k">Join①</td><td>자치구 주간인구지수 (2020)</td><td>공공데이터포털(통계청)</td><td>자치구 · 방향성 실증</td></tr>
+    <tr><td class="k">Join②</td><td>월별 기온·강수 (2015–2021)</td><td>기상청</td><td>연-월 · 날씨 영향 점검</td></tr>
+  </table>
+  <h3>분석 절차</h3>
+  <p>① 역명→자치구 매핑(서울 296역, 서울 외 수도권 제외) → ② 시간대·역·방향별 혼잡 집계 → ③ 주간인구지수 Join으로 방향성 검증(피어슨 상관·유의성 검정) → ④ folium 지도로 공간 시각화 → ⑤ 출퇴근 시간대별 혼잡 점수화 → ⑥ 자원 배치 우선순위·실행안 도출.</p>
+  <div class="insight"><b>혼잡도 정의의 한계</b> — 승·하차 인원은 개찰구 통과 기준으로, 열차 내 실제 혼잡률(%)과는 다르다. 본 분석은 인원 규모를 혼잡의 <b>대리지표(proxy)</b>로 사용하며, 역·시간 간 상대 비교에 초점을 둔다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">3.1</span> 호선별 이용 — 2호선 집중</h2>
+  <p>호선별 총 이용(승차+하차)을 보면 <b>2호선이 7,093만 명으로 압도적</b>이며, 2위 7호선(3,593만)의 약 2배에 달한다. 강남·홍대·잠실·구로디지털단지 등 핵심 업무·상업지를 순환하는 노선 특성이 그대로 반영된 결과다.</p>
+  <figure><img src="../outputs/호선별.png" style="max-height:70mm"><figcaption>호선별 총 이용(승차+하차) Top 12 — 2021년 6월</figcaption></figure>
+  <table>
+    <tr><th>순위</th><th>호선</th><th>총 이용(만 명)</th><th>특징</th></tr>
+    <tr><td class="rk">1</td><td class="k">2호선</td><td>7,093</td><td>순환선 — 강남·홍대·잠실·구로 경유</td></tr>
+    <tr><td class="rk">2</td><td class="k">7호선</td><td>3,593</td><td>강남·가산 등 업무축 종단</td></tr>
+    <tr><td class="rk">3</td><td class="k">5호선</td><td>3,297</td><td>여의도·광화문 도심 관통</td></tr>
+    <tr><td class="rk">4</td><td class="k">3호선</td><td>2,659</td><td>강남·도심 남북 종축</td></tr>
+    <tr><td class="rk">5</td><td class="k">4호선</td><td>2,514</td><td>서울역·사당 광역 환승</td></tr>
+  </table>
+  <div class="insight"><b>운영 함의</b> — 노선 단위 1순위는 2호선이다. 다만 ‘노선 총량’은 ‘역·시간대별 혼잡’과 다르므로, 이후 역×시간 단위로 더 정밀하게 분해해 실제 병목을 찾는다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">3.2</span> 시간대 패턴 — 출퇴근 양대 피크</h2>
+  <p>시간대별 승·하차를 보면 <b>출근 08–09시 하차</b>와 <b>퇴근 18–19시 승차</b>에 인원이 집중되는 두 봉우리가 뚜렷하다. 아침엔 도심에 ‘내리는’ 사람이, 저녁엔 도심에서 ‘타는’ 사람이 많다 — 혼잡의 <b>방향</b>이 시간대에 따라 정확히 뒤집힌다.</p>
+  <figure><img src="../outputs/시간대_패턴.png" style="max-height:66mm"><figcaption>시간대별 승·하차 인원 (2021.6) — 출근(하차)·퇴근(승차) 양대 피크</figcaption></figure>
+  <table>
+    <tr><th>피크 시간대</th><th>하차 (만 명)</th><th>승차 (만 명)</th><th>혼잡 성격</th></tr>
+    <tr><td class="k">출근 08–09시</td><td class="rk">2,117</td><td>1,744</td><td>도심 도착 — <b>하차</b> 우세</td></tr>
+    <tr><td class="k">퇴근 18–19시</td><td>1,847</td><td class="rk">1,984</td><td>도심 출발 — <b>승차</b> 우세</td></tr>
+  </table>
+  <div class="insight"><b>운영 함의</b> — 자원은 ‘하루 종일 균등’이 아니라 두 피크(08–09, 18–19)에 <b>집중 투입</b>해야 효율적이다. 출근은 하차, 퇴근은 승차 관리가 핵심이다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">3.3</span> 출근 — 타는 역 vs 내리는 역</h2>
+  <p>출근 시간(07–09시)에 많이 ‘타는’ 역은 <b>신림·사당 같은 주거지</b>이고, 많이 ‘내리는’ 역은 <b>가산디지털단지·여의도 같은 업무지구</b>다. 같은 출근 시간이라도 승차역과 하차역의 성격이 완전히 다르다.</p>
+  <p>특히 가산디지털단지는 출근 시간 하차만 <b>75만 명</b>으로 압도적이다. 여러 주거지에서 출발한 승객이 소수의 업무지구로 수렴하는 <b>‘다(多) → 소(少)’ 깔때기 구조</b>가 출근 혼잡의 본질이며, 이 ‘내리는 역’이 출근 안전관리의 핵심 지점이 된다.</p>
+  <figure><img src="../outputs/방향_출근.png" style="max-height:80mm"><figcaption>출근 — 많이 타는 역(좌, 주거지) / 많이 내리는 역(우, 업무지구)</figcaption></figure>
+  <div class="insight"><b>운영 함의</b> — 타는 역(주거지)은 승강장 진입·혼잡 관리, 내리는 역(업무지구)은 하차 동선·환승 관리로 대응을 달리해야 한다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">3.4</span> 퇴근 — 정반대 패턴</h2>
+  <p>퇴근 시간(17–19시)에는 정반대로, <b>업무지구(강남·여의도)에서 ‘타고’</b> 주거지로 흩어져 ‘내린다’. 출근과 퇴근의 흐름이 거울처럼 뒤집힌다.</p>
+  <p>강남은 퇴근 혼잡 <b>88만 명으로 전체 1위</b>이며, 잠실(86만)·가산디지털단지(82만)가 뒤를 잇는다. 출근에 ‘내리던’ 업무지구가 퇴근엔 ‘타는’ 폭주 지점으로 바뀐다 — 같은 역의 역할이 시간대에 따라 역전되는 것이다.</p>
+  <figure><img src="../outputs/방향_퇴근.png" style="max-height:80mm"><figcaption>퇴근 — 많이 타는 역(좌, 업무지구) / 많이 내리는 역(우, 주거지)</figcaption></figure>
+  <div class="insight"><b>운영 함의</b> — 같은 역도 시간대에 따라 관리 포인트가 <b>승강장↔동선</b>으로 전환된다. ‘역 고정’이 아니라 ‘시간대별 역할’로 봐야 한다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">3.5</span> 방향성 실증 — 통계 검정</h2>
+  <p>‘업무지구는 아침에 내린다’는 관찰이 우연인지 확인하기 위해, 역의 아침 승차비율을 자치구 <b>주간인구지수</b>(주간/상주 인구 비)와 비교했다. 주간인구지수가 높은 업무지구일수록 아침 승차비율이 낮다 — 즉 아침에 ‘내린다’.</p>
+  <div class="keybox"><b>상관계수 r = −0.67, p &lt; 0.0001</b> (p = 3.1×10⁻⁴⁰) — 귀무가설(상관 없음)을 기각. 방향성은 우연이 아닌 <b style="color:var(--navy)">통계적으로 유의한 구조적 패턴</b>이다.</div>
+  <figure><img src="../outputs/차트2_방향성산점도.png" style="max-height:58mm"><figcaption>자치구 주간인구지수 vs 역 아침 승차비율</figcaption></figure>
+  <table>
+    <tr><th>유형</th><th>대표 역 (아침 승차비율)</th></tr>
+    <tr><td class="k" style="color:var(--red)">업무지구형<br>(아침 내림)</td><td>종각 4% · 시청 5% · 을지로입구 5% · 국회의사당 5% · 을지로3가 6%</td></tr>
+    <tr><td class="k" style="color:var(--blue)">베드타운형<br>(아침 탐)</td><td>까치산 89% · 신정 88% · 암사 87% · 마들 86% · 화곡 86%</td></tr>
+  </table>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">3.6</span> 공간 분포 — 혼잡 지도</h2>
+  <p>혼잡을 지도에 올리면 도심 업무지구(붉은 마커)에 집중되고 주거지(파란 마커)는 외곽에 분포한다. 공간적으로도 ‘업무지구 = 혼잡 핵심’이 명확히 확인된다. 마커의 크기는 혼잡 규모를, 색은 역 유형(업무/주거)을 나타내어 ‘어디가 얼마나, 어떤 성격으로’ 붐비는지를 한 화면에 담았다.</p>
+  <figure><img src="../outputs/혼잡지도_미리보기.png" style="max-height:99mm"><figcaption>folium 혼잡 지도 — 유형별 색(업무=빨강·주거=파랑), 마커 크기=혼잡 규모</figcaption></figure>
+  <div class="insight"><b>운영 함의</b> — 혼잡은 공간적으로 도심 업무지구에 집중되므로, 한정된 자원은 도심 핫스팟에 우선 배분하는 것이 합리적이다. (대화형 지도는 GitHub <code>outputs/혼잡지도.html</code>에서 확인 가능)</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">3.7</span> 시계열 — 코로나와 날씨</h2>
+  <p>월별 지하철 총 이용량을 외부 기상데이터(기온·강수)와 결합해 시계열로 분석했다. 당초 가설은 ‘날씨가 나쁘면(비·눈) 지하철 수요가 달라질 것’이었으나, 결과는 정반대였다.</p>
+  <p>가장 큰 변동은 명백히 <b>2020년 코로나19로 인한 급감</b>(월 450만→280만대)이다. 반면 기온·강수와의 상관은 매우 약하다. 즉 <b>비가 오나 눈이 오나 통근 수요는 거의 흔들리지 않는</b>, 날씨에 견고한 패턴이다.</p>
+  <figure><img src="../outputs/시계열_날씨.png" style="max-height:60mm"><figcaption>월별 지하철 이용 vs 평균기온 (2015–2021, 78개월)</figcaption></figure>
+  <table>
+    <tr><th>변동 요인</th><th>이용량 영향</th><th>해석</th></tr>
+    <tr><td class="k">코로나 (2020)</td><td class="rk">급감 450→280만</td><td>시계열 최대 변동 — 지배적</td></tr>
+    <tr><td class="k">평균기온</td><td>r = 0.09</td><td>거의 무관</td></tr>
+    <tr><td class="k">강수량</td><td>r = −0.10</td><td>거의 무관</td></tr>
+  </table>
+  <div class="insight"><b>해석</b> — 혼잡의 시간적 변동은 ‘날씨’가 아니라 ‘사회적 요인(코로나)’이 좌우한다. 단 월별 평균 기준이며, <i>상관≠인과</i> 원칙에 따라 날씨는 부차적 요인으로만 해석한다. 날씨 데이터는 ‘혼잡이 날씨와 무관함’을 확인하는 근거로서 가치가 있다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">4.</span> 솔루션 — 데이터 기반 운영 개선안</h2>
+  <p class="lead">분석에서 도출한 혼잡 핫스팟을 <b>시간대별 승하차 규모 점수</b>로 우선순위화했다. 신설·개발이 아니라 <b>기존 자원의 재배치</b>로 즉시 실행 가능한 권고다.</p>
+  <h3>4.1 혼잡 핫스팟 우선순위 (역 × 시간)</h3>
+  <table>
+    <tr><th>순위</th><th>출근 07–09 (만 명)</th><th>퇴근 17–19 (만 명)</th><th>역 성격</th></tr>
+    <tr><td class="rk">1</td><td class="k">가산디지털단지 83</td><td class="k">강남 88</td><td>업무지구</td></tr>
+    <tr><td class="rk">2</td><td>여의도 68</td><td>잠실 86</td><td>업무·상업</td></tr>
+    <tr><td class="rk">3</td><td>구로디지털단지 67</td><td>가산디지털단지 82</td><td>업무지구</td></tr>
+    <tr><td class="rk">4</td><td>서울역 67</td><td>서울역 76</td><td>광역 허브</td></tr>
+    <tr><td class="rk">5</td><td>선릉 62</td><td>홍대입구 73</td><td>업무·상업</td></tr>
+  </table>
+  <div class="keybox" style="background:#FFF3E9;border-color:#F6D2AE"><b style="color:var(--orange)">가산디지털단지</b> <span style="color:var(--navy)">= 출근 1위(83만) + 퇴근 3위(82만) <b style="color:var(--navy);font-size:10.5pt">→ 양방향 슈퍼 핫스팟, 최우선 관리 대상.</b></span></div>
+  <div class="insight"><b>패턴 요약</b> — ① <b>업무지구(가산·여의도·강남·선릉)</b>는 출근 하차·퇴근 승차의 양방향 부담, ② <b>서울역</b>은 출퇴근 모두 상위인 광역 허브, ③ <b>잠실·홍대</b>는 퇴근·여가 수요가 큰 저녁형 핫스팟이다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">4.2</span> 시간대별 실행 권고</h2>
+  <p>핫스팟 우선순위(4.1)를 <b>구체적 운영 조치</b>로 연결한다. 출근·퇴근의 부담 지점과 대응이 다르다.</p>
+  <div class="cards">
+    <div class="card am"><h4>☀ 출근 07–09시</h4>
+      <ul>
+        <li><b>증차</b> — 가산·구로(1·2·7호선), 여의도(5·9호선) 피크 배차간격 단축</li>
+        <li><b>인력</b> — 하차 폭주역(가산·여의도·선릉) 환승통로·계단 안전요원</li>
+        <li><b>동선</b> — 가산디지털단지 하차 출구별 분산 안내(병목 완화)</li>
+        <li><b>승차측</b> — 신림·사당 등 주거지 승강장 진입 통제·혼잡 안내</li>
+      </ul></div>
+    <div class="card pm"><h4>🌙 퇴근 17–19시</h4>
+      <ul>
+        <li><b>증차</b> — 강남(2호선·신분당), 잠실(2·8호선) 막차 전까지 증차</li>
+        <li><b>인력</b> — 강남·잠실·고속터미널 승강장 혼잡 푸시·안전요원</li>
+        <li><b>분산</b> — 홍대입구 등 여가 수요역 저녁 시간대 추가 관리</li>
+        <li><b>안내</b> — 우회 노선·환승 정보 실시간 제공(승객 분산)</li>
+      </ul></div>
+  </div>
+  <table>
+    <tr><th>상시 관리</th><th>대상</th><th>조치</th></tr>
+    <tr><td class="k">광역 허브</td><td>서울역 · 선릉</td><td>출퇴근 양쪽 상위 → 종일 양방향 관리 + 환승 동선 분산</td></tr>
+  </table>
+  <div class="insight"><b>조치의 근거</b> — 위 권고는 4.1 핫스팟 점수(출근 가산 83만·퇴근 강남 88만)에 직접 대응한다. 증차·인력은 피크 2시간(08–09, 18–19)에 집중되므로 <b>추가 차량 도입 없이 기존 자원의 시간 재배분</b>만으로 실행 가능하다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">4.3</span> 실행 로드맵과 기대효과</h2>
+  <p>실현가능성을 기준으로 <b>비용 없이 즉시 가능한 것부터</b> 단계화했다.</p>
+  <table>
+    <tr><th>단계</th><th>조치</th><th>비용</th></tr>
+    <tr><td class="k">단기 (즉시)</td><td>기존 인력의 시간대별 재배치 · 핫스팟 혼잡 안내방송/사이니지</td><td>무(無)비용</td></tr>
+    <tr><td class="k">중기 (분기)</td><td>피크 시간대 배차 다이어그램 조정 · <b>월간 혼잡 모니터링 정례화</b></td><td>저비용</td></tr>
+    <tr><td class="k">장기 (연)</td><td>최우선 핫스팟(가산·강남) 승강장·계단·동선 개선 타당성 검토</td><td>투자 검토</td></tr>
+  </table>
+  <h3>4.4 기대효과 (KPI)</h3>
+  <table>
+    <tr><th>지표</th><th>현재 (As-Is)</th><th>개선 목표 (To-Be)</th></tr>
+    <tr><td class="k">피크 혼잡</td><td>08–09·18–19 첨두 집중</td><td>분산 안내·증차로 첨두 완화</td></tr>
+    <tr><td class="k">자원 배분</td><td>균등·직관 배치</td><td>핫스팟 우선 집중 배치</td></tr>
+    <tr><td class="k">안전 관리</td><td>사후 대응</td><td>핫스팟 사전 예방 배치</td></tr>
+    <tr><td class="k">모니터링</td><td>비정기</td><td>월간 정례화(자동 파이프라인)</td></tr>
+  </table>
+  <div class="insight"><b>실현가능성</b> — 핵심은 <b>신규 투자 없이 기존 인력·차량을 시간대별로 재배치</b>하는 데 있다. 본 분석 파이프라인(Python)을 매월 갱신하면 운영팀이 자체적으로 우선순위를 유지·업데이트할 수 있다.</div>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN</span><span class="pg"></span></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="n">5.</span> 결론</h2>
+  <p class="lead">바바라 민토 피라미드 원칙에 따라, 핵심 주장과 이를 떠받치는 세 근거로 마무리한다.</p>
+  <div class="keybox" style="background:var(--soft);border-color:var(--line)"><b style="color:var(--navy);font-size:12.5pt">서울 지하철 혼잡은 역·시간대·방향마다 구조적으로 다르며,<br>출퇴근·승하차를 분리해 자원을 차등 배치해야 한다.</b></div>
+  <ul>
+    <li><b>근거1 (시간대)</b> — 출근 08–09시 하차(2,117만) / 퇴근 18–19시 승차(1,984만), 양대 피크에 혼잡 집중 (3.2)</li>
+    <li><b>근거2 (방향성)</b> — 업무지구는 아침 하차·저녁 승차, 베드타운은 반대. 주간인구지수와 상관 r=−0.67, p&lt;0.0001로 통계 검증 (3.3–3.5)</li>
+    <li><b>근거3 (핫스팟)</b> — 출근 핫스팟(가산·여의도)과 퇴근 핫스팟(강남·잠실)이 다르므로 시간대별 차등 배치 필요. 가산디지털단지는 양방향 최우선 (4)</li>
+  </ul>
+  <p>요컨대 혼잡 대응의 핵심은 ‘더 많은 자원’이 아니라 <b>‘맞는 시간, 맞는 역, 맞는 방향’에 자원을 두는 것</b>이다. 본 분석은 그 판단의 데이터 근거를 제공하며, 제안한 운영안은 신규 투자 없이 즉시 적용 가능하다.</p>
+  <h2 class="sec" style="font-size:12pt;margin-top:6mm">부록 — 출처 · 한계 · 방법론</h2>
+  <ul>
+    <li><b>출처</b> — 지하철: 서울 열린데이터광장 / 인구: 공공데이터포털(통계청 2020) / 기상: 기상청 기상자료개방포털</li>
+    <li><b>한계</b> — 승·하차 인원은 개찰구 기준으로 열차 내 실제 혼잡률(%)과 다름 · 서울 외 수도권 역 제외(296역) · 날씨는 월별 평균 기준</li>
+    <li><b>제외</b> — 직업인구·거주인구는 주간인구지수와 메시지가 중복되어 미사용</li>
+    <li><b>방법론</b> — 바바라 민토 SCQA·피라미드 / Claus Wilke·heartcount 시각화 원칙 / Python·pandas·matplotlib·folium·scipy (GitHub: yearsubway_11team)</li>
+  </ul>
+  <div class="run"><span>서울 지하철 혼잡도 분석 보고서 · TEAM ELEVEN (T-XI) · 임유정 · 전경은 · 최용우 · 최동렬</span><span class="pg"></span></div>
+</section>
+
+</body></html>

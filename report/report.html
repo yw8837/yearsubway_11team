@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--navy:#15263F;--navy2:#1D3557;--red:#E63946;--blue:#457B9D;--cyan:#3DA9C4;--ink:#1E2733;--soft:#F5F7FA;--line:#E4E8EE;--muted:#6B7686}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{font-family:'Malgun Gothic','맑은 고딕',sans-serif;color:var(--ink)}
+  .slide{width:1280px;height:720px;padding:48px 64px;position:relative;page-break-after:always;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+  .slide:last-child{page-break-after:auto}
+  .shead{display:flex;align-items:center;gap:16px;border-bottom:3px solid var(--navy);padding-bottom:14px}
+  .snum{color:var(--red);font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+  .shead h2{font-size:29px;color:var(--navy);font-weight:700}
+  .shead .tag{margin-left:auto;font-size:14px;letter-spacing:.12em;color:var(--muted);font-weight:600;text-transform:uppercase}
+  .msg{font-size:22px;color:#2b3a4a;margin:22px 0 8px;line-height:1.5;font-weight:500}
+  .msg b{color:var(--red)}
+  .chart{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+  .chart img{max-width:100%;max-height:470px;object-fit:contain}
+  .foot{position:absolute;bottom:22px;left:64px;right:64px;display:flex;justify-content:space-between;font-size:13px;color:#b3bcc7;border-top:1px solid var(--line);padding-top:10px}
+  /* 표지 */
+  .cover{background:var(--navy);color:#fff;justify-content:center;padding:80px}
+  .cover::after{content:'';position:absolute;left:0;bottom:150px;width:32%;height:4px;background:var(--red)}
+  .cover .eyebrow{font-size:16px;letter-spacing:.22em;color:var(--cyan);font-weight:600}
+  .cover h1{font-size:58px;font-weight:800;line-height:1.18;margin-top:22px;letter-spacing:-.01em}
+  .cover .sub{font-size:22px;color:#BFD6E4;margin-top:20px;font-weight:500}
+  .cover .meta{position:absolute;top:80px;right:80px;text-align:right;font-size:15px;color:rgba(255,255,255,.8);font-weight:600;letter-spacing:.1em}
+  .cover .nums{display:flex;gap:48px;margin-top:48px}
+  .cover .nums b{display:block;font-size:38px;font-weight:800;color:#fff}
+  .cover .nums span{font-size:14px;color:var(--cyan)}
+  /* SCQA */
+  .scqa{display:grid;grid-template-columns:auto 1fr;gap:16px 22px;margin-top:30px}
+  .badge{width:54px;height:54px;border-radius:12px;color:#fff;font-weight:800;font-size:26px;display:flex;align-items:center;justify-content:center}
+  .scqa .t{align-self:center;font-size:20px;color:#2b3a4a;line-height:1.45}
+  .scqa .t b{color:var(--navy)}
+  /* 목차/표 */
+  .toc{display:grid;grid-template-columns:1fr 1fr;gap:14px 50px;margin-top:34px}
+  .toc div{font-size:21px;color:#2b3a4a;padding:12px 0;border-bottom:1px solid var(--line)}
+  .toc .n{color:var(--red);font-weight:700;margin-right:14px}
+  table{width:100%;border-collapse:collapse;font-size:18px;margin-top:18px}
+  th{background:var(--navy);color:#fff;text-align:left;padding:13px 16px;font-weight:600}
+  td{padding:12px 16px;border-bottom:1px solid var(--line);color:#2b3a4a}
+  tr:nth-child(even) td{background:var(--soft)}
+  td.k{font-weight:600;color:var(--navy)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;flex:1;align-items:center}
+  .keybox{background:var(--soft);border-left:5px solid var(--red);border-radius:0 12px 12px 0;padding:24px 28px;margin-top:20px}
+  .keybox .big{font-size:30px;font-weight:800;color:var(--navy)}
+  .keybox .sub{font-size:18px;color:var(--muted);margin-top:6px}
+  ul.pts{margin-top:18px;list-style:none}
+  ul.pts li{font-size:20px;color:#2b3a4a;padding:10px 0 10px 28px;position:relative;line-height:1.4}
+  ul.pts li::before{content:'';position:absolute;left:0;top:17px;width:11px;height:11px;border-radius:50%;background:var(--cyan)}
+  ul.pts li b{color:var(--navy)}
+</style></head><body>
+
+<!-- 1 표지 -->
+<section class="slide cover">
+  <div class="meta">YEARDREAM · TEAM 11</div>
+  <div class="eyebrow">서울교통공사 운영·안전팀 대상 · 데이터 분석 보고서</div>
+  <h1>서울 지하철 혼잡도 분석</h1>
+  <div class="sub">언제·어디서·어느 방향이 붐비는가 — 자원 배치를 위한 데이터 진단</div>
+  <div class="nums">
+    <div><b>296</b><span>분석 대상 역(서울)</span></div>
+    <div><b>45,338</b><span>데이터 행 · 2015–2021</span></div>
+    <div><b>2건</b><span>외부데이터 Join</span></div>
+  </div>
+</section>
+
+<!-- 2 목차 -->
+<section class="slide">
+  <div class="shead"><span class="snum">목차</span><h2>발표 순서</h2><span class="tag">Contents</span></div>
+  <div class="toc">
+    <div><span class="n">01</span>분석 배경 · 문제 (SCQA)</div>
+    <div><span class="n">05</span>발견② 출근 — 타는 역 / 내리는 역</div>
+    <div><span class="n">02</span>분석 개요 · 데이터</div>
+    <div><span class="n">06</span>발견③ 퇴근 — 정반대 패턴</div>
+    <div><span class="n">03</span>분석 질문</div>
+    <div><span class="n">07</span>발견④ 방향성 실증 (통계 검정)</div>
+    <div><span class="n">04</span>발견① 시간대 피크</div>
+    <div><span class="n">08</span>발견⑤ 혼잡 지도 · 시계열</div>
+    <div><span class="n">09</span>솔루션 — 자원 배치 권고</div>
+    <div><span class="n">10</span>결론 (핵심 메시지)</div>
+  </div>
+</section>
+
+<!-- 3 SCQA -->
+<section class="slide">
+  <div class="shead"><span class="snum">01</span><h2>분석 배경 — 왜 이 분석인가</h2><span class="tag">SCQA</span></div>
+  <div class="scqa">
+    <div class="badge" style="background:var(--blue)">S</div>
+    <div class="t"><b>상황</b> · 코로나 회복기에 지하철 이용이 빠르게 반등하며 출퇴근 혼잡이 다시 이슈가 됐다.</div>
+    <div class="badge" style="background:var(--navy)">C</div>
+    <div class="t"><b>문제</b> · 혼잡은 역·시간대·방향마다 큰 차이가 나는데, 평균 지표로는 ‘어디가 진짜 문제인지’ 안 보인다. → 자원이 ‘감’으로 배치된다.</div>
+    <div class="badge" style="background:var(--muted)">Q</div>
+    <div class="t"><b>질문</b> · 어느 역·어느 시간대·어느 방향이 가장 혼잡한가? 한정된 자원을 어디에 먼저 투입할까?</div>
+    <div class="badge" style="background:var(--red)">A</div>
+    <div class="t"><b>답</b> · 혼잡 핫스팟(역×시간×방향)을 데이터로 도출 → 출근/퇴근 시간대별 자원 배치 우선순위 제시.</div>
+  </div>
+</section>
+
+<!-- 4 분석 개요 -->
+<section class="slide">
+  <div class="shead"><span class="snum">02</span><h2>분석 개요 — 데이터와 방법</h2><span class="tag">Overview</span></div>
+  <div class="msg">서울 지하철 승하차 데이터에 <b>인구·기상 2건을 Join</b>해 혼잡의 구조를 분해했다.</div>
+  <table>
+    <tr><th>구분</th><th>데이터</th><th>역할</th></tr>
+    <tr><td class="k">메인</td><td>지하철 시간대별 승·하차 (2015–2021, 45,338행)</td><td>혼잡 = 승차+하차, 시간대·역·방향</td></tr>
+    <tr><td class="k">Join①</td><td>자치구 주간인구지수 (통계청 2020)</td><td>방향성(업무지구/베드타운) 실증</td></tr>
+    <tr><td class="k">Join②</td><td>월별 기온·강수 (기상청 2015–2021)</td><td>시계열 — 날씨 영향 점검</td></tr>
+  </table>
+  <div class="msg" style="font-size:18px;color:var(--muted)">분석 단위: 역 × 시간대 · 혼잡 정의: 승차+하차 인원 · 방향성: 아침 승차비율 + 주간인구지수</div>
+</section>
+
+<!-- 5 발견1 시간대 -->
+<section class="slide">
+  <div class="shead"><span class="snum">03</span><h2>발견① 출퇴근 양대 피크</h2><span class="tag">Finding</span></div>
+  <div class="msg">출근은 <b>08–09시 하차</b>, 퇴근은 <b>18–19시 승차</b>에 몰린다 — 두 봉우리가 명확하다.</div>
+  <div class="chart"><img src="../outputs/시간대_패턴.png"></div>
+</section>
+
+<!-- 6 발견2 출근 방향 -->
+<section class="slide">
+  <div class="shead"><span class="snum">04</span><h2>발견② 출근 — 어디서 타고 / 내리나</h2><span class="tag">Finding</span></div>
+  <div class="msg">출근엔 <b>주거지(신림·사당)에서 타서</b>, <b>업무지구(가산·여의도)에서 내린다.</b> 타는 역과 내리는 역이 완전히 다르다.</div>
+  <div class="chart"><img src="../outputs/방향_출근.png"></div>
+</section>
+
+<!-- 7 발견3 퇴근 방향 -->
+<section class="slide">
+  <div class="shead"><span class="snum">05</span><h2>발견③ 퇴근 — 정반대 패턴</h2><span class="tag">Finding</span></div>
+  <div class="msg">퇴근엔 <b>정반대</b> — 업무지구(강남·여의도)에서 타고, 주거지로 흩어져 내린다.</div>
+  <div class="chart"><img src="../outputs/방향_퇴근.png"></div>
+</section>
+
+<!-- 8 발견4 방향성 실증 -->
+<section class="slide">
+  <div class="shead"><span class="snum">06</span><h2>발견④ 방향성 실증 — 통계로 확인</h2><span class="tag">Finding</span></div>
+  <div class="two">
+    <div class="chart"><img src="../outputs/차트2_방향성산점도.png"></div>
+    <div>
+      <div class="keybox"><div class="big">r = −0.67</div><div class="sub">주간인구지수 ↔ 아침 승차비율</div></div>
+      <ul class="pts">
+        <li><b>p &lt; 0.0001</b> (p=3.1e-40) → 통계적으로 매우 유의, 우연 아님</li>
+        <li>업무지구(주간인구지수↑)일수록 아침에 <b>내린다</b></li>
+        <li>외부 인구데이터로 패턴을 <b>객관적 검증</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 9 발견5 지도+시계열 -->
+<section class="slide">
+  <div class="shead"><span class="snum">07</span><h2>발견⑤ 혼잡의 공간 분포 · 시계열</h2><span class="tag">Finding</span></div>
+  <div class="two">
+    <div class="chart"><img src="../outputs/혼잡지도_미리보기.png"></div>
+    <div>
+      <ul class="pts">
+        <li><b>공간</b> — 혼잡(빨강)은 도심 업무지구에 집중, 주거지(파랑)는 외곽</li>
+        <li><b>시계열</b> — 이용은 <b>2020 코로나로 급감</b>(450→280만)</li>
+        <li><b>날씨</b> — 기온·강수와 상관 미미(r≈0.09) → 출퇴근은 날씨 무관</li>
+        <li>혼잡은 ‘날씨’보다 ‘사회적 요인’에 좌우된다</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 10 솔루션 -->
+<section class="slide">
+  <div class="shead"><span class="snum">08</span><h2>솔루션 — 시간대별 자원 배치 권고</h2><span class="tag">So What</span></div>
+  <div class="msg">출근/퇴근 대상 역이 다르니, <b>같은 자원을 시간대별로 다르게 배치</b>해야 한다.</div>
+  <table>
+    <tr><th>시간대</th><th>우선 배치 역</th><th>운영 권고</th></tr>
+    <tr><td class="k">출근 07–09</td><td>가산디지털단지·여의도·구로(하차) / 신림·사당(승차)</td><td>업무지구 하차 동선·환승 / 주거지 승강장 진입 관리</td></tr>
+    <tr><td class="k">퇴근 17–19</td><td>강남·잠실·고속터미널·서울역</td><td>업무·번화가 승차 폭주 대비 증차·안전인력</td></tr>
+    <tr><td class="k">상시</td><td>강남·가산·서울역 (양방향 허브)</td><td>종일 관리 + 양방향 안내</td></tr>
+  </table>
+</section>
+
+<!-- 11 결론 -->
+<section class="slide" style="background:var(--soft)">
+  <div class="shead"><span class="snum">09</span><h2>결론 — 핵심 메시지</h2><span class="tag">Pyramid</span></div>
+  <div class="keybox" style="background:#fff"><div class="big" style="font-size:26px">서울 지하철 혼잡은 역·시간대·방향마다 구조적으로 다르며,<br>출퇴근·승하차를 분리해 자원을 <span style="color:var(--red)">차등 배치</span>해야 한다.</div></div>
+  <ul class="pts" style="margin-top:26px">
+    <li><b>근거1</b> — 출근 08–09시 하차 / 퇴근 18–19시 승차, 양대 피크</li>
+    <li><b>근거2</b> — 업무지구는 아침 하차·저녁 승차, 베드타운은 반대 (주간인구지수 r=−0.67, p&lt;0.0001)</li>
+    <li><b>근거3</b> — 출근 핫스팟(가산·여의도)과 퇴근 핫스팟(강남·잠실)이 다름 → 시간대별 차등 배치</li>
+  </ul>
+</section>
+
+<!-- 12 부록 -->
+<section class="slide">
+  <div class="shead"><span class="snum">부록</span><h2>데이터 출처 · 분석 한계</h2><span class="tag">Appendix</span></div>
+  <ul class="pts">
+    <li><b>출처</b> — 지하철: 서울 열린데이터광장 / 인구: 공공데이터포털(통계청) / 기상: 기상청 기상자료개방포털</li>
+    <li><b>한계</b> — 승·하차 인원은 개찰구 기준으로 열차 내 실제 혼잡률(%)과는 다름 (인원 규모를 대리지표로 사용)</li>
+    <li><b>한계</b> — 서울 외 수도권 역은 운영범위 밖이라 제외(296역) · 주간인구지수는 2020 기준</li>
+    <li><b>제외</b> — 직업인구·거주인구는 주간인구지수와 중복되어 미사용</li>
+  </ul>
+  <div class="foot"><span>서울 지하철 혼잡도 분석 · 11team</span><span>방법론: 바바라 민토 SCQA·피라미드 / Claus Wilke · heartcount 시각화 원칙</span></div>
+</section>
+
+</body></html>
