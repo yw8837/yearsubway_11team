@@ -17,3 +17,6 @@ __pycache__/
 
 .omc/
 _*.png
+
+# submission dataset (google drive, excluded by size)
+sub_data/
