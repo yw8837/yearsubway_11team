@@ -24,10 +24,12 @@
 
 ## 📁 폴더 구조
 ```
+[T-XI] … (노트).ipynb   최종 분석 노트북 (제출용 · 결과 포함)
+sub_data/      제출 데이터셋 (지하철 + 외부 Join용)
 docs/          기획서 PDF (+ _src HTML 소스)
-notebooks/     분석 노트북 ②~⑤
-outputs/       차트 PNG · folium 혼잡 지도
-report/        제출 보고서 · 발표자료
+notebooks/     단계별 분석 노트북 ②~⑤
+outputs/       차트 PNG · folium 혼잡지도(html)
+report/        제출 보고서(PDF) · 발표자료(PPTX) + 소스
 external_data/ 외부데이터(인구·기상) + 출처(SOURCES.md)
 ```
 
@@ -42,5 +44,8 @@ external_data/ 외부데이터(인구·기상) + 출처(SOURCES.md)
 ## 📄 산출물
 - 기획서 — `docs/[T-XI] 서울지하철_혼잡도분석 (기획서).pdf`
 - 보고서 — `report/[T-XI] 서울지하철_혼잡도분석 (보고서).pdf`
-- 발표자료 — `report/[T-XI] 서울지하철_혼잡도분석 (발표).pdf`
-- 분석 노트북 — `notebooks/`
+- 발표자료 — `report/[T-XI] 서울지하철_혼잡도분석 (발표).pptx` (17장 · 비주얼 슬라이드)
+- 분석 노트북 — `[T-XI] 서울지하철_혼잡도분석 (노트).ipynb` (보고서 흐름 통합 · 외부 Join 검증 · 차트 포함)
+  - 단계별: `notebooks/` ②로드 ③EDA ④심화 ⑤솔루션
+- folium 혼잡지도 — `outputs/혼잡지도.html`
+- 제출 데이터셋 — `sub_data/` (노트북과 함께 실행)

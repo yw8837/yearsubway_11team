@@ -20,3 +20,6 @@ _*.png
 
 # submission dataset (google drive, excluded by size)
 sub_data/
+
+# google drive shortcut (not for repo)
+*.url
