@@ -1,6 +1,10 @@
-# 원본 데이터 (용량 큼 · 출처는 README 참고)
-*.csv
+# 원본 대용량 데이터 (Downloads에 위치 · repo 밖)
 dataset/
+Seoul_subway_data_*.csv
+
+# 임시 점검 파일
+_*.txt
+_nb_out.txt
 
 # Python
 __pycache__/
