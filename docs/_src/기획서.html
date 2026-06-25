@@ -14,6 +14,7 @@
         font-size:10.5pt; -webkit-font-smoothing:antialiased; }
   .page{ width:210mm; height:297mm; padding:16mm 15mm; position:relative;
          page-break-after:always; overflow:hidden; background:#fff; }
+  .page:not(.cover){ display:flex; flex-direction:column; justify-content:space-between; }
   .page:last-child{ page-break-after:auto; }
 
   /* ── 표지 ── */
@@ -51,7 +52,7 @@
   p.body{ font-size:10.3pt; color:#33404F; margin-bottom:2mm; }
   .lead{ font-size:10.3pt; color:#33404F; }
   b.k{ color:var(--navy); font-weight:700; }
-  .running{ position:absolute; left:15mm; right:15mm; bottom:9mm; display:flex;
+  .running{ display:flex; margin-top:5mm;
      justify-content:space-between; font-size:8pt; color:var(--muted); border-top:1px solid var(--line); padding-top:2.5mm; }
 
   /* Executive summary */
@@ -129,6 +130,10 @@
   .rk td.r{ font-weight:600; color:var(--navy); width:42%; }
   .rk tr:nth-child(even) td{ background:var(--softer); }
   .foot-note{ font-size:8.4pt; color:var(--muted); margin-top:6mm; line-height:1.6; }
+  .txi{ position:absolute; top:30mm; right:18mm; width:29mm; height:21mm; background:#1B7A3D; border-radius:4mm; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.3); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .txi .stripe{ position:absolute; top:-4mm; left:-8%; width:116%; height:10mm; background:linear-gradient(180deg,#F57C1F 0 55%,#E63946 55% 100%); border-radius:0 0 55% 55%/0 0 100% 100%; }
+  .txi b{ color:#fff; font-size:15pt; font-weight:900; z-index:1; margin-top:4mm; text-shadow:0 1px 2px rgba(0,0,0,.2); }
+  .txi span{ color:#fff; font-size:4pt; letter-spacing:2pt; z-index:1; font-weight:700; margin-top:.5mm; }
 </style>
 </head>
 <body>
@@ -139,7 +144,8 @@
   <div class="cover-inner">
     <div class="eyebrow">YEARDREAM · DATA ANALYSIS PROJECT</div>
     <div class="cover-team">TIMLEVEN · T-XI</div>
-    <div class="cover-title">서울 지하철<br>혼잡도 분석</div>
+    <div class="txi"><div class="stripe"></div><b>T-XI</b><span>TIMLEVEN</span></div>
+    <div class="cover-title">서울 지하철<br>혼잡도 분석 <span style="font-size:19pt;color:var(--red);font-weight:700">기획서</span></div>
     <div class="cover-sub">운영 자원 배치를 위한 데이터 기반 혼잡 진단</div>
     <div class="cover-q">클라이언트 ｜ 서울교통공사 운영·안전팀 — “어느 역·어느 시간대·어느 방향이 가장 혼잡한가? 한정된 차량·인력을 어디에 먼저 투입할 것인가?”</div>
     <div class="cover-cards">
@@ -147,7 +153,7 @@
       <div class="ccard"><div class="num">2</div><div class="lab">외부데이터 Join</div></div>
       <div class="ccard"><div class="num">45,338</div><div class="lab">데이터 행 · 78개월</div></div>
     </div>
-    <div class="cover-foot">TIMLEVEN (T-XI) · 임유정 · 전경은 · 최용우 · 최동렬 &nbsp;|&nbsp; 분석 2015.01–2021.06 · 기준월 2021.06 · 11team 기획서</div>
+    <div class="cover-foot">TIMLEVEN (T-XI) · 임유정 · 전경은 · 최용우 · 최동렬 &nbsp;|&nbsp; 분석 2015.01–2021.06 · 기준월 2021.06 · 작성일 2026.06.26</div>
   </div>
 </section>
 
@@ -160,13 +166,16 @@
 
   <div class="sec">
     <div class="ph"><span class="n">01</span><h2>추진 배경 및 문제 정의</h2><span class="en">Background</span></div>
-    <p class="body">코로나19 이후 지하철 수송 수요가 회복 국면에 들어서며 출퇴근 혼잡이 다시 안전·서비스 이슈로 부상하고 있다. 운영기관은 사고 예방과 서비스 품질을 위해 혼잡 구간을 선제적으로 관리해야 하지만, 차량과 인력은 한정되어 있어 <b class="k">‘선택과 집중’</b>이 불가피하다.</p>
-    <p class="body">문제는 혼잡이 노선·역·시간대·방향에 따라 큰 편차를 보임에도, 일·월 단위 평균 지표로는 어디가 실제 병목인지 드러나지 않는다는 점이다. 그 결과 자원 배치가 <b class="k">경험과 직관</b>에 의존하게 되어, 정작 붐비는 구간을 놓치거나 과배치되는 비효율이 발생한다.</p>
+    <p class="body">코로나19 이후 지하철 수요가 회복되며 출퇴근 혼잡이 다시 안전·서비스 이슈로 부상했다. 그러나 차량·인력은 한정되어 <b class="k">‘선택과 집중’</b>이 불가피한데, 혼잡은 노선·역·시간대·방향별 편차가 커서 일·월 평균 지표로는 어디가 병목인지 드러나지 않는다. 그 결과 자원이 <b class="k">경험과 직관</b>에 의존해 배치되어, 붐비는 구간을 놓치거나 과배치되는 비효율이 발생한다.</p>
     <div class="scqa">
       <div class="badge" style="background:var(--blue)">S</div>
       <div class="t"><b>Situation</b> · 코로나 회복기, 지하철 이용 반등. 운영팀은 한정 자원으로 혼잡을 관리해야 한다.</div>
       <div class="badge" style="background:var(--navy)">C</div>
       <div class="t"><b>Complication</b> · 혼잡은 역·시간대·방향별 편차가 큰데 평균 지표로는 안 보여 자원배치 근거가 부족하다.</div>
+      <div class="badge" style="background:var(--muted)">Q</div>
+      <div class="t"><b>Question</b> · 어느 역·어느 시간대·어느 방향이 가장 혼잡하며, 자원 투입 우선순위는 무엇인가?</div>
+      <div class="badge" style="background:var(--red)">A</div>
+      <div class="t"><b>Answer</b> · 핫스팟(역×시간×방향)을 점수화해 도출하고, 출퇴근 시간대별 배치 우선순위·실행안을 제시한다.</div>
     </div>
   </div>
 
@@ -183,7 +192,7 @@
       </tbody>
     </table>
   </div>
-  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>11team</span><span>2</span></div>
+  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>TIMLEVEN</span><span>2</span></div>
 </section>
 
 <!-- PAGE 3 -->
@@ -217,12 +226,12 @@
     </div>
     <p class="foot-note">※ 데이터 한계 : 승·하차 인원은 개찰구 통과 기준으로, 열차 내부의 실제 혼잡률(%)과는 다르다. 본 분석은 인원 규모를 혼잡 대리지표로 사용하며 그 한계를 6·9장에서 명시·보완한다.</p>
   </div>
-  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>11team</span><span>3</span></div>
+  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>TIMLEVEN</span><span>3</span></div>
 </section>
 
 <!-- PAGE 4 · 방법론 -->
 <section class="page">
-  <div class="sec">
+  <div class="sec" style="flex:1;display:flex;flex-direction:column;justify-content:space-between">
     <div class="ph"><span class="n">05</span><h2>분석 방법론</h2><span class="en">Methodology</span></div>
     <p class="body"><b class="k">5.1 혼잡도 정의</b> — 데이터에 기록된 시간대별 승·하차 인원을 혼잡의 1차 지표로 삼아, <b class="k">역×시간대 단위 (승차+하차) 인원</b>을 ‘이용 집중도’로 집계하고 절대 규모와 순위를 함께 본다.</p>
     <p class="body"><b class="k">5.2 방향성 지표 · 외부 검증</b> — 역별 <b class="k">승차비율 = 승차/(승차+하차)</b>로 정의(&gt;0.5 주거 우세, &lt;0.5 업무 우세). 이를 자치구 <b class="k">주간인구지수와 피어슨 상관·유의성 검정</b>으로 객관 검증한다(귀무가설: 상관 없음 → 기각 시 통계적으로 유의).</p>
@@ -239,8 +248,9 @@
     <div class="def"><b>5.4 시각화 원칙 (Claus Wilke)</b> — 정렬은 데이터가 결정(값 기준 정렬), 색은 의미 있게(혼잡=난색), 역×시간 히트맵으로 2차원 패턴을 압축, folium 지도는 마커 크기·색을 함께 써 중복 인코딩한다.
       <div class="small">주유소 시장분석 예제(SCQA · 기초통계 · Wilke 시각화 · folium · 보고서)를 벤치마크로 동일 수준의 풀 분석을 지향한다.</div>
     </div>
+    <p class="body" style="margin-top:4mm"><b class="k">5.5 검증</b> — 노트북 전 셀을 재현 실행(nbconvert)해 에러 없음을 확인하고, 외부데이터 Join은 <b class="k">자치구 매칭률·연-월 매칭</b>을 점검한다. 방향성 상관은 <b class="k">유의성(p-value)</b>으로 우연 가능성을 배제해 결론의 신뢰도를 확보한다.</p>
   </div>
-  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>11team</span><span>4</span></div>
+  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>TIMLEVEN</span><span>4</span></div>
 </section>
 
 <!-- PAGE 5 -->
@@ -266,19 +276,14 @@
   </div>
 
   <div class="sec">
-    <div class="ph"><span class="n">08</span><h2>추진 일정 및 역할 분담</h2><span class="en">Schedule &amp; R&amp;R</span></div>
-    <div class="tl">
-      <div class="tphase"><div class="w">WEEK 1</div><div class="t">기획 확정 · 데이터 정제 / Feature Engineering</div></div>
-      <div class="tphase"><div class="w">WEEK 2</div><div class="t">분석 · 시각화 · folium 지도 제작</div></div>
-      <div class="tphase"><div class="w">WEEK 3</div><div class="t">PPT / 노션 보고서 · 발표 준비</div></div>
-    </div>
+    <div class="ph"><span class="n">08</span><h2>역할 분담 (R&amp;R)</h2><span class="en">Roles</span></div>
     <div class="rr">
-      <div class="role">임유정</div>
-      <div class="role">전경은</div>
-      <div class="role">최용우</div>
-      <div class="role">최동렬</div>
+      <div class="role">데이터 수집·정제·Join <span>· 임유정</span></div>
+      <div class="role">분석·통계 검정 <span>· 전경은</span></div>
+      <div class="role">PM · 시각화·folium 지도 <span>· 최용우</span></div>
+      <div class="role">보고서·발표·검수 <span>· 최동렬</span></div>
     </div>
-    <p class="foot-note" style="margin-top:4mm">협업 — GitHub <b>yearsubway_11team</b> 통합관리(팀장 단일 커밋) + 노션(회의록·역할분담). 데이터 원본은 .gitignore 처리, 출처만 README에 명시.</p>
+    <p class="foot-note" style="margin-top:4mm">협업 — GitHub <b>yearsubway_11team</b>로 통합 관리(단계별 기록 커밋). 데이터 원본은 <b>.gitignore</b> 처리, 출처만 README에 명시.</p>
   </div>
 
   <div class="sec">
@@ -293,7 +298,7 @@
       </tbody>
     </table>
   </div>
-  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>11team</span><span>5</span></div>
+  <div class="running"><span>서울 지하철 혼잡도 분석 · 기획서</span><span>TIMLEVEN</span><span>5</span></div>
 </section>
 
 </body>
