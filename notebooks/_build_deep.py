@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
-"""④ 심화 분석 노트북(.ipynb) 생성 — 인구 Join & 역×시간 핫스팟."""
+"""④ 심화 분석 노트북 — 인구 Join(방향성) & 혼잡(승차+하차) 패턴."""
 import nbformat as nbf
 nb = nbf.v4.new_notebook(); cells = []
 M = lambda t: cells.append(nbf.v4.new_markdown_cell(t))
 C = lambda t: cells.append(nbf.v4.new_code_cell(t))
 
-M("""# ④ 심화 분석 — 인구 Join & 역×시간 핫스팟
+M("""# ④ 심화 분석 — 인구 Join & 혼잡 패턴
 **11team · 서울 지하철 혼잡도 분석**
 
-③ EDA에서 본 **방향성(업무지구 vs 베드타운)**을 외부 인구데이터로 **실증**하고,
-운영 의사결정의 핵심인 **역×시간 혼잡 핫스팟**을 도출한다.""")
+1. **방향성**(역 성격: 주거 vs 업무)을 외부 인구데이터로 실증
+2. **혼잡 = 승차 + 하차** 기준으로 역×시간 패턴 도출 (출근·퇴근 둘 다)
+> ⚠️ 혼잡 '규모'(승하차 합)와 '방향성'(아침 승/하차 비율)은 다른 축 — 구분해서 본다.""")
 
 C("""import pandas as pd, numpy as np, re
 import matplotlib.pyplot as plt, seaborn as sns, matplotlib
 matplotlib.rcParams['font.family'] = 'Malgun Gothic'
 matplotlib.rcParams['axes.unicode_minus'] = False
-NAVY, RED, BLUE = '#1D3557', '#E63946', '#457B9D'
+NAVY, RED, BLUE, PUR = '#1D3557', '#E63946', '#457B9D', '#7B2CBF'
 
 SUBWAY_DIR = r"C:/Users/최용우/Downloads/drive-download-20260625T013956Z-3-001/dataset"
 EXT_DIR    = r"C:/Users/최용우/claude/yearsubway_11team/external_data"
@@ -29,87 +30,77 @@ loc   = read_csv_auto(f"{SUBWAY_DIR}/subway_location_data.csv")
 on_cols  = [c for c in metro.columns if '승차인원' in c]
 off_cols = [c for c in metro.columns if '하차인원' in c]
 slots    = [c.replace(' 승차인원','') for c in on_cols]
-jun = metro[metro['사용월']==202106].copy()
-jun['총승차'] = jun[on_cols].sum(axis=1)
-print("2021.06 :", jun.shape, "/ 역", jun['지하철역'].nunique(), "개")""")
+jun = metro[metro['사용월']==202106].copy()""")
 
-M("""## 1. 역 → 자치구 매핑
-좌표 데이터의 `주소`에서 자치구를 추출한다.
-- **서울 외(경기·인천 등) 역은 서울교통공사 운영범위 밖** → 분석 대상에서 제외
-- `서울역`은 좌표 데이터 누락이라 수동 보정(중구)""")
-C("""def keyf(x):   # 역명 정규화: 괄호·끝'역' 제거 → metro와 좌표 매칭 키
-    return re.sub(r'역$','', re.sub(r'\\(.*?\\)','', str(x))).strip()
-def get_gu(addr):
-    p = str(addr).split()
-    return p[1] if p and p[0].startswith('서울') else None
-
-loc['key'] = loc['지하철역'].apply(keyf)
-loc['자치구'] = loc['주소'].apply(get_gu)
-loc_key = loc.dropna(subset=['자치구']).drop_duplicates('key').set_index('key')['자치구']
-
-st = jun.groupby('지하철역')[on_cols + off_cols].sum()
-st.columns = [c for c in on_cols] + [c for c in off_cols]
-st = st.reset_index()
-st['key'] = st['지하철역'].apply(keyf)
-st['자치구'] = st['key'].map(loc_key)
-st.loc[st['지하철역']=='서울역', '자치구'] = '중구'      # 좌표 누락 보정
-
+M("## 1. 역 → 자치구 매핑 (서울 외 제외, 서울역 보정)")
+C("""def keyf(x): return re.sub(r'역$','', re.sub(r'\\(.*?\\)','', str(x))).strip()
+def get_gu(a):
+    p=str(a).split(); return p[1] if p and p[0].startswith('서울') else None
+loc['key']=loc['지하철역'].apply(keyf); loc['자치구']=loc['주소'].apply(get_gu)
+lk = loc.dropna(subset=['자치구']).drop_duplicates('key').set_index('key')['자치구']
+st = jun.groupby('지하철역')[on_cols+off_cols].sum().reset_index()
+st['key']=st['지하철역'].apply(keyf); st['자치구']=st['key'].map(lk)
+st.loc[st['지하철역']=='서울역','자치구']='중구'
 seoul = st[st['자치구'].notna()].copy()
-print(f"전체 {len(st)}역 → 서울 소재 {len(seoul)}역 (경기·인천 등 {len(st)-len(seoul)}역 제외)")""")
+print("서울 분석역:", len(seoul))""")
 
-M("""## 2. 주간인구지수 Join — 방향성 실증
-자치구 **주간인구지수**(주간/상주×100, 2020)를 Join.
-역별 **아침(07–09시) 승차비율** = 아침승차/(아침승차+아침하차)와 비교한다.""")
+M("""## 2. 주간인구지수 Join — 방향성(역 성격) 실증
+아침(07–09시) **승차비율** = 아침승차/(아침승차+아침하차)로 역 성격을 본다.
+- 낮음 → 아침에 **내리는** 업무지구 / 높음 → 아침에 **타는** 주거지(베드타운)""")
 C("""ju = pd.read_excel(f"{EXT_DIR}/서울특별시_자치구별 연령별 주간 야간 인구_20201231.xlsx", header=1)
-ju['행정구역별'] = ju['행정구역별'].ffill()
-gu = ju[(ju['성별']=='계') & (ju['연령별']=='합계') & (ju['행정구역별']!='서울특별시')].copy()
-gu['자치구'] = gu['행정구역별'].str.replace('　','',regex=False).str.strip()
+ju['행정구역별']=ju['행정구역별'].ffill()
+gu = ju[(ju['성별']=='계')&(ju['연령별']=='합계')&(ju['행정구역별']!='서울특별시')].copy()
+gu['자치구']=gu['행정구역별'].str.replace('　','',regex=False).str.strip()
 gu_idx = gu.set_index('자치구')['주간 인구 지수']
-
 am_on  = [c for c in on_cols  if c.startswith(('07시','08시'))]
 am_off = [c for c in off_cols if c.startswith(('07시','08시'))]
-seoul['아침승차'] = seoul[am_on].sum(axis=1)
-seoul['아침하차'] = seoul[am_off].sum(axis=1)
-seoul['아침승차비율'] = seoul['아침승차'] / (seoul['아침승차'] + seoul['아침하차'])
+seoul['아침승차비율'] = seoul[am_on].sum(axis=1)/(seoul[am_on].sum(axis=1)+seoul[am_off].sum(axis=1))
 seoul['주간인구지수'] = seoul['자치구'].map(gu_idx)
-
-v = seoul[(seoul['아침승차']+seoul['아침하차']) > 10000].dropna(subset=['주간인구지수'])
-corr = v['주간인구지수'].corr(v['아침승차비율'])
-print(f"분석역 {len(v)}개 | 주간인구지수 ↔ 아침승차비율 상관 = {corr:.3f}")""")
-C("""fig, ax = plt.subplots(figsize=(8,5.5))
-ax.scatter(v['주간인구지수'], v['아침승차비율'], s=28, alpha=0.55, color=BLUE, edgecolors='white', lw=0.5)
-m, b = np.polyfit(v['주간인구지수'], v['아침승차비율'], 1)
-xs = np.array([v['주간인구지수'].min(), v['주간인구지수'].max()])
-ax.plot(xs, m*xs+b, color=RED, lw=2, label=f'추세선 (r={corr:.2f})')
-ax.axhline(0.5, color='gray', ls=':', lw=1)
-ax.set_xlabel('자치구 주간인구지수 (높을수록 업무지구)')
-ax.set_ylabel('역 아침 승차비율 (높을수록 베드타운)')
-ax.set_title('업무지구일수록 아침에 사람이 "내린다" — 방향성 실증', color=NAVY, fontsize=13)
-ax.legend(); ax.grid(alpha=.3); plt.tight_layout(); plt.show()""")
-M("""**해석** — 강한 음의 상관(r≈−0.67). 주간인구지수가 높은 업무지구 역(중구·종로)일수록 아침 승차비율이 0.05 안팎으로 낮다 = **아침에 대부분 하차**(출근 유입). 반대로 주거지(강서·강북) 역은 0.9 가까이 = **아침에 대부분 승차**(출근 유출).
-*(상관≠인과: 업무지구→일자리 집중→아침 유입이라는 구조가 배경)*""")
-
-M("## 3. 역×시간 핫스팟 히트맵\n승차 인원 상위 15개 역의 시간대별 승차량 — **어느 역·어느 시간**에 혼잡이 몰리는지 한눈에.")
-C("""seoul_total = seoul.set_index('지하철역')[on_cols].sum(axis=1)
-top15 = seoul_total.nlargest(15).index
-mat = seoul.set_index('지하철역').loc[top15][on_cols]
-mat.columns = slots
-fig, ax = plt.subplots(figsize=(13,6))
-sns.heatmap(mat/1e4, cmap='Reds', linewidths=.4, linecolor='white',
-            cbar_kws={'label':'승차 (만 명, 6월 합)'}, ax=ax)
-ax.set_title('역 × 시간대 혼잡 핫스팟 — 승차 Top15역', color=NAVY, fontsize=13)
-ax.set_xlabel(''); ax.set_ylabel('')
-plt.xticks(rotation=60, fontsize=8); plt.yticks(fontsize=9, rotation=0)
+seoul['유형'] = np.where(seoul['아침승차비율']<0.4,'업무지구',np.where(seoul['아침승차비율']>0.6,'베드타운','혼합'))
+v = seoul[(seoul[am_on].sum(axis=1)+seoul[am_off].sum(axis=1))>10000].dropna(subset=['주간인구지수'])
+print(f"분석역 {len(v)} | 주간인구지수 ↔ 아침승차비율 상관 = {v['주간인구지수'].corr(v['아침승차비율']):.3f}")""")
+C("""cm={'업무지구':RED,'베드타운':BLUE,'혼합':PUR}
+fig, ax = plt.subplots(figsize=(9,6))
+for t in ['업무지구','혼합','베드타운']:
+    sub=v[v['유형']==t]; ax.scatter(sub['주간인구지수'],sub['아침승차비율'],c=cm[t],s=34,alpha=.55,edgecolors='white',lw=.4,label=t)
+mq,bq=np.polyfit(v['주간인구지수'],v['아침승차비율'],1); xs=np.array([v['주간인구지수'].min(),v['주간인구지수'].max()])
+ax.plot(xs,mq*xs+bq,color='#333',lw=1.6,ls='--',label=f"추세 r={v['주간인구지수'].corr(v['아침승차비율']):.2f}")
+ax.axhline(0.5,color='gray',ls=':',lw=.8)
+for r in ['시청','종각','강남','여의도','신림','까치산','잠실(송파구청)']:
+    row=v[v['지하철역']==r]
+    if len(row): ax.annotate(r.split('(')[0],(row['주간인구지수'].iloc[0],row['아침승차비율'].iloc[0]),fontsize=8.5,fontweight='bold',color=NAVY,xytext=(4,4),textcoords='offset points')
+ax.set_xlabel('자치구 주간인구지수 (→ 업무지구)'); ax.set_ylabel('역 아침 승차비율 (↑ 베드타운)')
+ax.set_title('방향성 실증 — 업무지구일수록 아침에 "내린다"',color=NAVY,fontsize=13)
+ax.legend(fontsize=9,loc='upper right'); ax.spines[['top','right']].set_visible(False); ax.grid(alpha=.25)
 plt.tight_layout(); plt.show()""")
 
-M("""---
-## ✅ 심화 분석 요약
-- **방향성 실증**: 주간인구지수 ↔ 아침승차비율 상관 −0.67 → 업무지구/베드타운 구조 확인
-- **핫스팟**: 승차 Top15역 × 시간대 히트맵으로 혼잡 집중 구간 가시화 (퇴근 18–19시 + 출근 08–09시 강남·잠실 등)
+M("""## 3. 혼잡 패턴 — **승차 + 하차** 둘 다
+혼잡 = 승차 + 하차 인원. 역×시간 단위로 집계해 출근·퇴근 혼잡을 모두 본다.""")
+C("""slot_sum = pd.DataFrame({slots[i]: seoul[on_cols[i]].values + seoul[off_cols[i]].values
+                         for i in range(len(slots))}, index=seoul['지하철역'].values)
+seoul['총혼잡'] = slot_sum.sum(axis=1).values
+# 혼잡 규모 Top10 (승하차 합)
+top10 = seoul.nlargest(10,'총혼잡')[['지하철역','자치구','유형','총혼잡']].iloc[::-1]
+fig, ax = plt.subplots(figsize=(9,5))
+ax.barh(top10['지하철역'], top10['총혼잡']/1e4, color=NAVY)
+for i,vv in enumerate(top10['총혼잡']): ax.text(vv/1e4+1,i,f'{vv/1e4:.0f}만',va='center',fontsize=9,color=NAVY,fontweight='bold')
+ax.set_xlabel('하루 혼잡 인원 (승차+하차, 만 명)'); ax.set_title('혼잡 규모 Top10 역 (승차+하차)',color=NAVY,fontsize=13)
+ax.spines[['top','right']].set_visible(False); ax.margins(x=0.13); plt.tight_layout(); plt.show()""")
+C("""# 역×시간 히트맵 (승차+하차)
+top15 = seoul.nlargest(15,'총혼잡')['지하철역']
+mat = slot_sum.loc[top15]; mat.columns=[s.replace('시-','–').replace('시','') for s in slots]
+fig, ax = plt.subplots(figsize=(13,6))
+sns.heatmap(mat/1e4, cmap='Reds', linewidths=.4, linecolor='white', cbar_kws={'label':'혼잡 (승+하, 만 명)'}, ax=ax)
+ax.set_title('역×시간 혼잡 핫스팟 (승차+하차) — 출근·퇴근 양쪽 피크',color=NAVY,fontsize=13)
+ax.set_xlabel(''); ax.set_ylabel('')
+plt.xticks(rotation=55,fontsize=8); plt.yticks(rotation=0,fontsize=9); plt.tight_layout(); plt.show()""")
 
+M("""---
+## ✅ 심화 요약
+- **방향성**(역 성격): 주간인구지수 ↔ 아침승차비율 상관 −0.67 → 업무지구/베드타운 실증
+- **혼잡 규모**(승차+하차): 강남·잠실·가산디지털단지 등이 최대, 히트맵에 **출근·퇴근 양쪽 피크** 모두 표시
 ### ▶ 다음 (⑤ 솔루션)
-- **folium 혼잡 지도**: 역별 혼잡도·피크시간 마커
-- **자원배치 권고**: 핫스팟 점수화 → 증차·안전인력 우선순위(실현가능)""")
+출근/퇴근 분리 권고 + folium 지도""")
 
 nb.cells = cells; nb.metadata = {"language_info": {"name":"python"}}
 nbf.write(nb, "notebooks/04_심화분석.ipynb")
