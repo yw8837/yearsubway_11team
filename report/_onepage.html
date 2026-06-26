@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#13294B;--navy2:#1D3A5F;--red:#E63946;--cyan:#0E9FBF;--gold:#E0871E;--green:#27A567;--ink:#1E2A3A;--mut:#6E7E92;--line:#E4EAF1;--soft:#F2F6FB}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:'Malgun Gothic','맑은 고딕',sans-serif}
+.page{width:1920px;height:1080px;background:#fff;position:relative;overflow:hidden;color:var(--ink);display:flex;flex-direction:column;padding:14px 42px 8px;gap:8px}
+.topbar{position:absolute;top:0;left:0;right:0;height:10px;background:linear-gradient(90deg,var(--navy),var(--cyan))}
+.hd{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--navy);padding-bottom:13px}
+.hd .ttl{font-size:37pt;font-weight:900;color:var(--navy);letter-spacing:-1.5px;line-height:1}
+.hd .ttl b{color:var(--red)}
+.hd .sub{font-size:12.5pt;color:var(--mut);margin-top:8px;font-weight:600}
+.hd .meta{text-align:right;font-size:11pt;color:var(--mut);font-weight:600;line-height:1.65}
+.hd .meta b{color:var(--navy);font-size:13.5pt}
+.hero{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.nc{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:13px 19px;border-left:5px solid var(--navy)}
+.nc.r{border-left-color:var(--red)}.nc.c{border-left-color:var(--cyan)}.nc.g{border-left-color:var(--gold)}
+.nc .n{font-size:29pt;font-weight:900;color:var(--navy);line-height:1;letter-spacing:-1px}
+.nc.r .n{color:var(--red)}.nc.c .n{color:var(--cyan)}.nc.g .n{color:var(--gold)}
+.nc .l{font-size:10pt;color:var(--mut);margin-top:5px;font-weight:600}
+.sec{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 17px;box-shadow:0 3px 10px rgba(19,41,75,.04)}
+.sh{font-size:12.5pt;font-weight:900;color:var(--navy);margin-bottom:9px;display:flex;align-items:center;gap:8px}
+.sh::before{content:'';width:5px;height:15px;background:var(--cyan);border-radius:2px}
+.sh.red::before{background:var(--red)}.sh.gold::before{background:var(--gold)}
+.g3{display:grid;grid-template-columns:1fr 1fr 1.05fr;gap:15px}
+.g2{display:grid;grid-template-columns:1.45fr 1fr;gap:15px;flex:1}
+.scqa{display:flex;flex-direction:column;gap:7px}
+.sq{display:flex;gap:9px;align-items:flex-start;font-size:10.5pt;line-height:1.35}
+.sq b{display:inline-flex;width:20px;height:20px;border-radius:5px;color:#fff;font-size:9pt;font-weight:800;align-items:center;justify-content:center;flex-shrink:0}
+.sq .s{background:var(--cyan)}.sq .c{background:var(--navy)}.sq .q{background:var(--mut)}.sq .a{background:var(--red)}
+.sq span em{font-style:normal;font-weight:800;color:var(--navy)}
+.dl{display:flex;flex-direction:column;gap:8px;font-size:10.5pt}
+.dr{display:flex;gap:9px;align-items:center}
+.dr .ic{font-size:15pt}.dr .tx b{color:var(--navy)}
+.badge{display:inline-block;font-size:8pt;background:var(--cyan);color:#fff;padding:1px 7px;border-radius:10px;font-weight:700;margin-left:3px}
+.st3{display:flex;flex-direction:column;gap:8px}
+.stc{display:flex;align-items:center;gap:12px;background:var(--soft);border-radius:10px;padding:8px 13px;border-left:4px solid var(--red)}
+.stc.b{border-left-color:var(--navy)}.stc.g{border-left-color:var(--gold)}
+.stc .v{font-size:16pt;font-weight:900;color:var(--navy);min-width:76px}
+.stc .d{font-size:9.5pt;color:var(--mut);line-height:1.25}.stc .d b{color:var(--ink)}
+.charts{display:flex;flex-direction:column}
+.cf{flex:1;display:flex;flex-direction:column;min-height:0}
+.cf img{width:100%;flex:1;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff;min-height:0}
+.cf .cc{font-size:9.5pt;color:var(--mut);margin-top:4px;font-weight:600;text-align:center}
+.ht{width:100%;border-collapse:collapse;font-size:10pt}
+.ht th{background:var(--navy);color:#fff;padding:6px 9px;text-align:left;font-weight:700;font-size:9.5pt}
+.ht td{padding:6px 9px;border-bottom:1px solid var(--line);font-weight:600}
+.ht tr.hl td{background:rgba(255,243,233,.9);font-weight:800}
+.ht .tg{background:var(--red);color:#fff;font-size:8pt;padding:1px 7px;border-radius:10px}
+.tsbox{margin-top:9px;background:var(--soft);border-radius:9px;padding:8px 12px;font-size:9.5pt;color:var(--ink);line-height:1.4}.tsbox b{color:var(--navy)}
+.act{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:13px;padding:14px 22px;color:#fff}
+.act .ah{font-size:12.5pt;font-weight:900;margin-bottom:9px;display:flex;align-items:center;gap:9px}.act .ah b{color:#7FE3F5}
+.road{display:flex;align-items:stretch}
+.rs{flex:1;padding:9px 14px 9px 26px;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%,16px 50%);margin-left:-14px;background:rgba(255,255,255,.1)}
+.rs:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%)}
+.rs .rt{font-size:11pt;font-weight:900}
+.rs .rd{font-size:9.5pt;margin-top:4px;line-height:1.3;opacity:.95}
+.ft{display:flex;justify-content:space-between;align-items:center;font-size:10pt;color:var(--mut);font-weight:600;border-top:1px solid var(--line);padding-top:8px}
+.ft b{color:var(--navy)}
+</style></head><body>
+<div class="page">
+  <div class="topbar"></div>
+  <div class="hd">
+    <div><div class="ttl">서울 지하철 <b>혼잡도 분석</b></div><div class="sub">언제·어디서·어느 방향이 붐비는가 — 운영 자원 배치를 위한 데이터 진단</div></div>
+    <div class="meta"><b>TIMLEVEN (T-XI)</b><br>임유정 · 전경은 · 최용우 · 최동렬<br>2026.06.26 · 클라이언트: 서울교통공사 운영팀</div>
+  </div>
+  <div class="hero">
+    <div class="nc"><div class="n">296</div><div class="l">분석 대상 역 (서울)</div></div>
+    <div class="nc r"><div class="n">−0.67</div><div class="l">방향성 상관 (p&lt;0.0001)</div></div>
+    <div class="nc g"><div class="n">83만</div><div class="l">출근 1위 · 가산디지털단지</div></div>
+    <div class="nc c"><div class="n">88만</div><div class="l">퇴근 1위 · 강남</div></div>
+  </div>
+  <div class="g3">
+    <div class="sec"><div class="sh">분석 배경 · SCQA</div>
+      <div class="scqa">
+        <div class="sq"><b class="s">S</b><span>코로나 회복기, 지하철 이용 반등</span></div>
+        <div class="sq"><b class="c">C</b><span>혼잡은 역·시간·방향마다 다른데 <em>평균으론 안 보임</em></span></div>
+        <div class="sq"><b class="q">Q</b><span>어디·언제·어느 방향이 가장 혼잡한가?</span></div>
+        <div class="sq"><b class="a">A</b><span><em>핫스팟 점수화</em> → 시간대별 자원배치 우선순위</span></div>
+      </div></div>
+    <div class="sec"><div class="sh">데이터 · 방법</div>
+      <div class="dl">
+        <div class="dr"><span class="ic">🚇</span><span class="tx"><b>승하차</b> 45,338행 · 296역 (2015–21)</span></div>
+        <div class="dr"><span class="ic">👥</span><span class="tx"><b>주간인구지수</b><span class="badge">외부 Join</span> 자치구 키</span></div>
+        <div class="dr"><span class="ic">🌦️</span><span class="tx"><b>기온·강수</b><span class="badge">외부 Join</span> 년월 키</span></div>
+        <div class="dr"><span class="ic">📐</span><span class="tx">혼잡 = 승차+하차 · 역×시간 집계</span></div>
+      </div></div>
+    <div class="sec"><div class="sh red">통계 검증 (피라미드 근거)</div>
+      <div class="st3">
+        <div class="stc"><div class="v">R²=.45</div><div class="d"><b>① 회귀</b> 주간인구지수→아침승차비율 · p&lt;0.001</div></div>
+        <div class="stc b"><div class="v">t=−13.7</div><div class="d"><b>② t-검정</b> 업무지구 vs 베드타운 · p&lt;0.001</div></div>
+        <div class="stc g"><div class="v">F=36.5</div><div class="d"><b>③ ANOVA</b> 시간대 4그룹 차이 · p&lt;0.001</div></div>
+      </div></div>
+  </div>
+  <div class="g2">
+    <div class="sec charts"><div class="sh">분석 결과 · 시각화</div>
+      <div class="cf"><img src="../outputs/시간대_패턴.png"><div class="cc">시간대별 승·하차 — 출근 08–09 하차 / 퇴근 18–19 승차, 양대 피크</div></div>
+    </div>
+    <div class="sec"><div class="sh">혼잡 핫스팟</div>
+      <table class="ht">
+        <tr><th>역명</th><th>출근</th><th>퇴근</th><th>성격</th></tr>
+        <tr class="hl"><td>가산디지털단지</td><td>83만</td><td>82만</td><td><span class="tg">양방향</span></td></tr>
+        <tr><td>강남</td><td>—</td><td>88만</td><td>업무</td></tr>
+        <tr><td>잠실</td><td>—</td><td>86만</td><td>업무·상업</td></tr>
+        <tr><td>서울역</td><td>67만</td><td>76만</td><td>광역 허브</td></tr>
+      </table>
+      <div class="tsbox"><b>시계열</b> — 2020 코로나 급감 지배 · 기온·강수 상관 미미(r≈.09) → <b>날씨 무관, 통근 견고</b></div>
+    </div>
+  </div>
+  <div class="act"><div class="ah">⚡ Action Plan · <b>자원 배치 권고 (So What?)</b></div>
+    <div class="road">
+      <div class="rs"><div class="rt">단기 · 무비용</div><div class="rd">기존 인력 시간대별 재배치 · 핫스팟 혼잡 안내방송</div></div>
+      <div class="rs"><div class="rt">중기 · 저비용</div><div class="rd">피크 배차 다이어그램 조정 · 월간 모니터링 정례화</div></div>
+      <div class="rs"><div class="rt">장기 · 투자검토</div><div class="rd">가산·강남 승강장·동선 개선 타당성 검토</div></div>
+    </div>
+  </div>
+  <div class="ft"><span>출근 가산·여의도 증차 / 퇴근 강남·잠실 승강장 푸시 · 서울역·선릉 상시 관리</span><span><b>혼잡 대응 = 맞는 시간 · 맞는 역 · 맞는 방향에 자원을 두는 것</b></span></div>
+</div>
+</body></html>
